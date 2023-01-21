@@ -1,0 +1,21 @@
+---
+title: "Take-home Exercise 1"
+author: "YSYK"
+---
+
+# 1. The Task
+
+The task for take-home exercise 1 is to plot the age-sex pyramid for 9 selected area in Singapore to illustrate thedemographic structure of Singapore at planning area level.
+
+# 2. The Data
+
+*Singapore Residents by Planning Area / Subzone, Age Group, Sex and Type of Dwelling, June 2022* from [Department of Statistics, Singapore](https://www.singstat.gov.sg/) is used to display 9 planning area.
+
+# 3. Step by Step Description
+
+| No. | Step | Action |
+|-----|------|--------|
+| 1   |      |        |
+|     |      |        |
+|     |      |        |
+|     |      |        |

@@ -1,6 +1,0 @@
----
-title: "Take-home_Ex01"
-author: "YSYK"
----
-
-# Getting Started
