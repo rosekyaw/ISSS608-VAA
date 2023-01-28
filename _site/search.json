@@ -11,7 +11,28 @@
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
     "title": "Hands-on Exercise 1",
     "section": "",
-    "text": "The code chunk below use p_load() of pacman package to check if tidyverse packages have been installed in the computer. If they are, then they will be launched.\n\npacman::p_load(tidyverse)\n\n\n\n\n\nexam_data <- read_csv(\"data/Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+    "text": "The code chunk below use p_load() of pacman package to check if tidyverse packages have been installed in the computer. If they are, then they will be launched.\n\npacman::p_load(tidyverse,)\n\n\nYour package installed\n\n\nWarning in pacman::p_load(tidyverse, ): Failed to install/load:\n\n\n\n\n\n\nexam_data <- read_csv(\"data/Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html",
+    "title": "In-class Exercise 3",
+    "section": "",
+    "text": "pacman::p_load(tidyverse,ggiraph)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#importing-the-data",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#importing-the-data",
+    "title": "In-class Exercise 3",
+    "section": "Importing the data",
+    "text": "Importing the data\n\nexam_data <- read_csv(\"data/Exam_data.csv\")"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#plotting-the-data",
+    "href": "In-class_Ex/In-class_Ex03/In-class_Ex03.html#plotting-the-data",
+    "title": "In-class Exercise 3",
+    "section": "Plotting the data",
+    "text": "Plotting the data\n\nggplot(data=exam_data,\n       aes(x = MATHS))+\n  geom_dotplot(dotsize=0.5)\n\n\n\n\n\np <- ggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_dotplot_interactive(\n    aes(tooltip = ID),\n    stackgroups = TRUE, \n    binwidth = 1, \n    method = \"histodot\") +\n  scale_y_continuous(NULL, \n                     breaks = NULL)\ngirafe(\n  ggobj = p,\n  width_svg = 6,\n  height_svg = 6*0.618\n)"
   },
   {
     "objectID": "index.html",

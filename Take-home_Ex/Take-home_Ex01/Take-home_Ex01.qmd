@@ -15,49 +15,49 @@ The task for take-home exercise 1 is to plot the population pyramid for 9 select
 
 The final worksheet is published in https://public.tableau.com/app/profile/yun.shwe.yee.kyaw/viz/Take-home_Ex01_16742356941600/Age-SexPyramid
 
-+-----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| No. | Step                                                                                                                                                                                                                            |
-+=====+=================================================================================================================================================================================================================================+
-| 1   | Load the data file respopagesextod2022.csv into Tableau                                                                                                                                                                         |
-|     |                                                                                                                                                                                                                                 |
-|     | ![](images/Picture1.png)                                                                                                                                                                                                        |
-+-----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 2   | Open a new worksheet and drag Age to Rows                                                                                                                                                                                       |
-|     |                                                                                                                                                                                                                                 |
-|     | ![](images/Picture2.png)                                                                                                                                                                                                        |
-+-----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 3   | Select Sex and right click. Select Create -\> Calculated Field to create two new variables **Males** and **Females**                                                                                                            |
-|     |                                                                                                                                                                                                                                 |
-|     | ![](images/Picture3.png)                                                                                                                                                                                                        |
-+-----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 4   | Males and Females variables are created using condition as shown on these pictures.                                                                                                                                             |
-|     |                                                                                                                                                                                                                                 |
-|     | ![](images/Picture5.png)                                                                                                                                                                                                        |
-|     |                                                                                                                                                                                                                                 |
-|     | ![](images/Picture4.png)                                                                                                                                                                                                        |
-+-----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 5   | Drag PA, Males and Females to the Columns                                                                                                                                                                                       |
-|     |                                                                                                                                                                                                                                 |
-|     | ![](images/Picture7.png)                                                                                                                                                                                                        |
-+-----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 6   | Right click on the PA and select Top. Next, sort the PA based on the number of population in descending order and take the top 9 populat![](images/Picture8.png)ed areas for plotting age-sex pyramid as shown in the picture.  |
-+-----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 7   | Select Males axis and right click on it as shown in the picture.                                                                                                                                                                |
-|     |                                                                                                                                                                                                                                 |
-|     | ![](images/Picture9-01.png)                                                                                                                                                                                                     |
-+-----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 8   | Tick the Reversed as shown in the picture.                                                                                                                                                                                      |
-|     |                                                                                                                                                                                                                                 |
-|     | ![](images/Picture10.png)                                                                                                                                                                                                       |
-+-----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 9   | Drag Males variable to SUM(Males) area and change the colour. Do the same for Females variable.                                                                                                                                 |
-|     |                                                                                                                                                                                                                                 |
-|     | ![](images/Picture11.png)                                                                                                                                                                                                       |
-+-----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| 10  | The final complete plot with legend is as shown in the picture.                                                                                                                                                                 |
-|     |                                                                                                                                                                                                                                 |
-|     | ![](images/Picture12-01.png)                                                                                                                                                                                                    |
-+-----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
++-----+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| No. | Step                                                                                                                                                                                                                           |
++=====+================================================================================================================================================================================================================================+
+| 1   | Load the data file respopagesextod2022.csv into Tableau                                                                                                                                                                        |
+|     |                                                                                                                                                                                                                                |
+|     | ![](images/Picture1.png)                                                                                                                                                                                                       |
++-----+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 2   | Open a new worksheet and drag Age to Rows                                                                                                                                                                                      |
+|     |                                                                                                                                                                                                                                |
+|     | ![](images/Picture2.png)                                                                                                                                                                                                       |
++-----+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 3   | Select Sex and right click. Select Create -\> Calculated Field to create two new variables **Males** and **Females**                                                                                                           |
+|     |                                                                                                                                                                                                                                |
+|     | ![](images/Picture3.png)                                                                                                                                                                                                       |
++-----+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 4   | Males and Females variables are created using condition as shown on these pictures.                                                                                                                                            |
+|     |                                                                                                                                                                                                                                |
+|     | ![](images/Picture5.png)                                                                                                                                                                                                       |
+|     |                                                                                                                                                                                                                                |
+|     | ![](images/Picture4.png)                                                                                                                                                                                                       |
++-----+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 5   | Drag PA, Males and Females to the Columns                                                                                                                                                                                      |
+|     |                                                                                                                                                                                                                                |
+|     | ![](images/Picture7.png)                                                                                                                                                                                                       |
++-----+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 6   | Right click on the PA and select Top. Next, sort the PA based on the number of population in descending order and take the top 9 populat![](images/Picture8.png)ed areas for plotting age-sex pyramid as shown in the picture. |
++-----+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 7   | Select Males axis and right click on it as shown in the picture.                                                                                                                                                               |
+|     |                                                                                                                                                                                                                                |
+|     | ![](images/Picture9-01.png)                                                                                                                                                                                                    |
++-----+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 8   | Tick the Reversed as shown in the picture.                                                                                                                                                                                     |
+|     |                                                                                                                                                                                                                                |
+|     | ![](images/Picture10.png)                                                                                                                                                                                                      |
++-----+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 9   | Drag Males variable to SUM(Males) area and change the colour. Do the same for Females variable.                                                                                                                                |
+|     |                                                                                                                                                                                                                                |
+|     | ![](images/Picture11.png)                                                                                                                                                                                                      |
++-----+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| 10  | The final complete plot with legend is as shown in the picture.                                                                                                                                                                |
+|     |                                                                                                                                                                                                                                |
+|     | ![](images/Picture12-01.png)                                                                                                                                                                                                   |
++-----+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 # 4. Different Types of Population Pyramid
 
@@ -71,13 +71,11 @@ Expansive population pyramids are used to display the population that are growin
 
 **Constrictive**
 
-Constrictive population pyramids are used to are used to display the population that are shrinking and most of the populations are in older age cohorts. They can often look like beehives and has narrow base. Constrictive pyramids indicate low fertility, low mortality, high life expectancy and ageing of
-population.
+Constrictive population pyramids are used to are used to display the population that are shrinking and most of the populations are in older age cohorts. They can often look like beehives and has narrow base. Constrictive pyramids indicate low fertility, low mortality, high life expectancy and ageing of population.
 
 **Stationary**
 
-Stationary, or near stationary, population pyramids are used to display the populations that are not growing and have equal distribution across age cohorts . They usually have rectangular that get narrower toward the top. Stationary pyramids indicate low fertility, low mortality and
-high life expectancy.
+Stationary, or near stationary, population pyramids are used to display the populations that are not growing and have equal distribution across age cohorts . They usually have rectangular that get narrower toward the top. Stationary pyramids indicate low fertility, low mortality and high life expectancy.
 
 # 5. Discussion
 
@@ -107,8 +105,7 @@ The below picture is the final result of data visualization for 9 planning area.
 
 ![](images/Picture13-02.png)
 
-As you can see from the picture above, Bedok and Jurong West area display the distinct constrictive population pyramid shapes while the others displays marginally constrictive population pyramid shapes. These plots also reveal that Singapore have low fertility, low mortality, high life expectancy and ageing of
-population. It also indicates that Singapore is a developed country with ease access of birth control and advanced health care facilities.
+As you can see from the picture above, Bedok and Jurong West area display the distinct constrictive population pyramid shapes while the others displays marginally constrictive population pyramid shapes. These plots also reveal that Singapore have low fertility, low mortality, high life expectancy and ageing of population. It also indicates that Singapore is a developed country with ease access of birth control and advanced health care facilities.
 
 # 6. Reference
 
