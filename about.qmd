@@ -2,8 +2,4 @@
 title: "About"
 ---
 
-About this site
-
-```{r}
-1 + 1
-```
+This website is to record all the courseworks/exercises for the ISSS608-VAA module.

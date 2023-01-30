@@ -1,4 +1,96 @@
 ---
 title: "Take-home Exercise 2"
 author: "YSYK"
+date: "`r Sys.Date()`"
+execute: 
+  warning: false
+format:
+  html:
+    code-fold: true
+    code-summary: "Show the code"
 ---
+
+# 1. The Task
+
+The task for take-home exercise 2 is to critic one of my classmate' work for take-home exercise 1 in terms of clarity and aesthetics. Then, the original design will be remade using the data visualization design principles and the best practices learned in lesson 1 and 2. The remade design is created using ggplot2, ggplot2 extensions and tidyverse packages.
+
+# 2. The Data
+
+The same data from take-home exercise 1 is used. The data is extracted from *Singapore Residents by Planning Area / Subzone, Age Group, Sex and Type of Dwelling, June 2022* from [Department of Statistics, Singapore](https://www.singstat.gov.sg/).
+
+Below are the steps taken to install packages, load libraries and import data.
+
+#### Install packages and load libraries
+
+Install tidyverse and ggiraph libraries to use for visualization.
+
+```{r}
+pacman::p_load(tidyverse,ggiraph)
+```
+
+#### Import data
+
+Raw data is imported from respopagesextod2022.csv and put into population_data data frame.
+
+```{r}
+population_data <- read_csv("data/respopagesextod2022.csv",show_col_types = FALSE)
+```
+
+# 3. The Critique
+
+In this section, the original design done by [Prachi Ashani](https://public.tableau.com/app/profile/prachi.ashani/viz/TakeHome_01/DBAge-SexPyramidbyPA) will be reviewed in terms of clarity and aesthetics.
+
+A trellis display with population pyramid is used to illustrate the demographic structure of Singapore for 9 planning areas.
+
+![](Pictures/Original%20display.png){fig-align="center" width="1920"}
+
+#### **Clarity**
+
+-   The title is clear and informative and the caption is used to state data source. Each area has its own title to state the planning area and percentages of population for each age group are clearly displayed.
+
+-   The order of Age Groups will be better represented in ascending order in upward direction since it is a common practice for population pyramid. It is also easier to categorize the type of population pyramid such as constrictive type if it is constructed using common practice.
+
+-   The age can be displayed as per the data instead of grouping since the grouping of age can be subjective and can sometimes mislead the information.
+
+#### Aesthetics
+
+-   The overall dsiplay is easy to understand and beautifully illustrated.
+
+-   Although using the different colors for each age category is aesthetically pleasing, it can distract the audience from grasping the data visualization. It is better to use the same color with different gradients to display the number of population.
+
+-   The percentage can be displayed using the tooltip instead of putting it on the graph. The graph will be cleaner and easier to see from the audience perceptive.
+
+#  4. The Remake
+
+The original design done by tableau will be remade using r with a few modifications for better visualization.
+
+#### Data Wrangling
+
+The data is prepared for plotting population pyramid . Firstly, the *population_data* is filtered for 9 most populous planning areas in Central Singapore by using filter function. Then, 0_to_4 and 5_to_9 values are replaced with 00_to_04 and 05_09 respectively to keep the age variable in ascending order by using str_replace function. Finally, the population data is grouped by using age, sex and population with summation of population for each category.
+
+```{r}
+PA_9 <- c("Tanglin","Bukit Timah","Downtown Core","Newton","Novena","Orchard","Outram","River Valley","Rochor")
+popData_9 <- filter(population_data, PA %in% PA_9)
+popData_9$AG<-str_replace(as.character(popData_9$AG),"^0_to_4$","00_to_04")
+popData_9$AG<-str_replace(as.character(popData_9$AG),"5_to_9","05_to_09")
+popData_9_Group <- popData_9 %>% group_by(PA,AG,Sex)  %>% summarise(Pop = sum(Pop))
+```
+
+#### Plotting Population Pyramid in Trellis Display
+
+After preparing the suitable data, the population pyramid is plotted using ggplot in trellis display setting for 9 central planning areas. The tooltip is used to displayed the total number of population for each age,sex category.
+
+```{r fig.width = 10, fig.height = 10}
+pyramidGH <- ggplot(popData_9_Group, aes(x=AG, y=Pop, fill=Sex)) + 
+  geom_bar_interactive(data=subset(popData_9_Group, Sex=="Females"), stat="identity",aes(tooltip = Pop)) +  
+  geom_bar_interactive(data=subset(popData_9_Group, Sex=="Males"), stat="identity",aes(y=Pop*(-1),tooltip=Pop)) + 
+  scale_y_continuous(breaks=seq(-4000,4000,2000),labels=abs(seq(-4000,4000,2000))) +
+  coord_flip() + facet_wrap(~ PA) +
+  labs(title="Population Pyramid for 9 most Populous Planning Areas in Central Area - June 2022", x="Age", y="Population", caption = "Data Source:Department of Statistics,Singapore (SingStat)")
+
+girafe(ggobj = pyramidGH )
+```
+
+# 5. The Learning Points
+
+Take home exercise 2 serves as a reflection for take home exercise 1 since I can see the visualization from different perspective through peer review. It make me realize the importance of seeing the visualization from audience perceptive. Take home exercise 2 also helps me to improve my r coding skill through practice as well as more understanding about the functions/features of different library.

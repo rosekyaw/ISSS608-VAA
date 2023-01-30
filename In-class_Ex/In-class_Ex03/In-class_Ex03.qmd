@@ -18,11 +18,13 @@ pacman::p_load(tidyverse,ggiraph)
 ```
 
 ## Importing the data
+
 ```{r}
 exam_data <- read_csv("data/Exam_data.csv")
 ```
 
 ## Plotting the data
+
 ```{r}
 ggplot(data=exam_data,
        aes(x = MATHS))+
@@ -47,4 +49,3 @@ girafe(
 )
 
 ```
-
