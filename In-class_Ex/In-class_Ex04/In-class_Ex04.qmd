@@ -6,19 +6,9 @@
 
 ```
 
----
+------------------------------------------------------------------------
 
-title: "In-class Exercise 04"
-author: "YSYK"
-date: 4 Feb 2023
-date-modified: "`r Sys.Date()`"
-execute: 
-  echo: true
-  eval: true
-  warning: false
-format: html
-editor: visual
----
+title: "In-class Exercise 04" author: "YSYK" date: 4 Feb 2023 date-modified: "`r Sys.Date()`" execute: echo: true eval: true warning: false format: html editor: visual ---
 
 ## Install and launching R packages
 
@@ -108,4 +98,37 @@ plot(parameters(model1))
 ```{r}
 ggcoefstats(model1, 
             output = "plot")
+```
+
+```{r}
+my_sum <- exam_data %>%
+  group_by(RACE) %>%
+  summarise(
+    n=n(),
+    mean=mean(MATHS),
+    sd=sd(MATHS)
+    ) %>%
+  mutate(se=sd/sqrt(n-1))
+
+knitr::kable(head(my_sum), format = 'html')
+
+# Visualizing the uncertainty of point estimates: ggplot2 methods
+ggplot(my_sum) +
+  geom_errorbar(
+    aes(x=RACE, 
+        ymin=mean-se, 
+        ymax=mean+se), 
+    width=0.2, 
+    colour="black", 
+    alpha=0.9, 
+    size=0.5) +
+  geom_point(aes
+           (x=RACE, 
+            y=mean), 
+           stat="identity", 
+           color="red",
+           size = 1.5,
+           alpha=1) +
+  ggtitle("Standard error of mean 
+          maths score by rac")
 ```
