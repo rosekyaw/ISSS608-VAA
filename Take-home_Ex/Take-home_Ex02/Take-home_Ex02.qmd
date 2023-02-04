@@ -60,7 +60,7 @@ A trellis display with population pyramid is used to illustrate the demographic 
 
 -   The percentage can be displayed using the tooltip instead of putting it on the graph. The graph will be cleaner and easier to see from the audience perceptive.
 
-#  4. The Remake
+# 4. The Remake
 
 The original design done by tableau will be remade using r with a few modifications for better visualization.
 
