@@ -1,0 +1,19 @@
+---
+title: "Take-home Exercise 3"
+author: "YSYK"
+date: "`r Sys.Date()`"
+execute: 
+  warning: false
+format:
+  html:
+    code-fold: true
+    code-summary: "Show the code"
+---
+
+# 1. The Task
+
+The task is to reveal the patterns of resale prices of public housing property by residential towns and estates in Singapore. The intention is to help the users to have better data discovery experience by using relevant interactive visualization techniques. The visualisation
+
+# 2. The Data
+
+# 3.

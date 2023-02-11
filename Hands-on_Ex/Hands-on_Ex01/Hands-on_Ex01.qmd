@@ -11,7 +11,7 @@ date: "`r Sys.Date()`"
 The code chunk below use p_load() of pacman package to check if tidyverse packages have been installed in the computer. If they are, then they will be launched.
 
 ```{r}
-pacman::p_load(tidyverse,)
+pacman::p_load(tidyverse)
 ```
 
 ## Importing the data
