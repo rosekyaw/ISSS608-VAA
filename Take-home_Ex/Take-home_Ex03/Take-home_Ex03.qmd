@@ -16,4 +16,161 @@ The task is to reveal the patterns of resale prices of public housing property b
 
 # 2. The Data
 
-# 3.
+#### Install packages and load libraries
+
+Install and load all the relevant libraries to use for visualization.
+
+```{r}
+pacman::p_load(ggstatsplot,tidyverse,plotly,gganimate,performance, ggdist, FunnelPlotR)
+```
+
+#### Import data
+
+Raw data is imported from resaleFlatPrices2022.csv and put into resalePrice data frame. The raw data is cleaned up to focus only on 3-ROOM, 4-ROOM and 5-ROOMtypes and the study period is 2022.
+
+```{r}
+resaleFlatRaw  <- read_csv("data/resaleFlatPrices2022.csv") 
+
+```
+
+#### 
+
+Data Wrangling
+
+After the data is imported and data conversion of year to month is done for remaining_lease variable as shown below.
+
+First the remaining_lease column is extracted into remaining_lease_year and remaining_lease_month and converted into integer variables. Next, the NA is replaced with 0 for remaining_lease_month. Lastly, remaining_lease_months variable is created by adding up remaining_lease_year and remaining_lease_month into months.
+
+```{r}
+resaleFlat <- resaleFlatRaw %>% 
+  mutate(resale_price=as.integer(resale_price)) %>% 
+  mutate(floor_area_sqm=as.integer(floor_area_sqm)) %>% 
+  extract(remaining_lease,c("remaining_lease_year","remaining_lease_month"),
+          "([0-9]{2}) years ?([0-9]{2})?",convert=TRUE) %>% 
+  mutate(remaining_lease_month=replace_na(remaining_lease_month,0)) %>% 
+  mutate(remaining_lease_months=(remaining_lease_year*12)+remaining_lease_month)     %>% select(-c(remaining_lease_year,remaining_lease_month))
+```
+
+# 3. The Visual Analytics
+
+```{r}
+resaleFlat3B <- filter(resaleFlat,flat_type=="3 ROOM")
+resaleFlat4B <- filter(resaleFlat,flat_type=="4 ROOM")
+resaleFlat5B <- filter(resaleFlat,flat_type=="5 ROOM")
+resaleFlat5B
+```
+
+```{r}
+
+lines_group <- ggplot(resaleFlat3B,
+                aes(x = month,
+                    y = resale_price,
+                    group = town)) + 
+  geom_line(aes(color = town))
+
+lines_group
+```
+
+```{r}
+gghistostats(
+  data = resaleFlat3B,
+  x = resale_price,
+  type = "bayes",
+  xlab = "Resale Price"
+)
+```
+
+```{r}
+gghistostats(
+  data = resaleFlat4B,
+  x = resale_price,
+  type = "bayes",
+  xlab = "Resale Price"
+)
+```
+
+```{r}
+gghistostats(
+  data = resaleFlat5B,
+  x = resale_price,
+  type = "bayes",
+  xlab = "Resale Price"
+)
+```
+
+```{r}
+ggbetweenstats(
+  data = resaleFlat,
+  x = flat_type, 
+  y = resale_price,
+  type = "p",
+  mean.ci = TRUE, 
+  pairwise.comparisons = TRUE, 
+  pairwise.display = "s",
+  p.adjust.method = "fdr",
+  messages = FALSE
+)
+```
+
+```{r}
+resaleFlat3B1 <- resaleFlat3B %>% mutate(remaining_lease_bins = cut(remaining_lease_months, breaks = c(0,600,720,840,960, 1200))) %>% mutate(resale_price_bins = cut(resale_price, breaks = c(0,250000,500000,750000,1000000))) %>% mutate(floor_area_sqm_bins = cut(floor_area_sqm, breaks = c(0,50,70,90,110,140)))
+```
+
+```{r}
+ggbarstats(resaleFlat3B1,
+           x = resale_price_bins, 
+           y = floor_area_sqm_bins)
+
+
+```
+
+```{r}
+resaleFlat4B1 <- resaleFlat4B %>% mutate(remaining_lease_bins = cut(remaining_lease_months, breaks = c(0,600,720,840,960, 1200))) %>% mutate(resale_price_bins = cut(resale_price, breaks = c(0,250000,500000,750000,1000000,1500000))) %>% mutate(floor_area_sqm_bins = cut(floor_area_sqm, breaks = c(0,70,90,110,140)))
+```
+
+```{r}
+ggbarstats(resaleFlat4B1,
+           x = resale_price_bins, 
+           y = floor_area_sqm_bins)
+```
+
+```{r}
+  resaleFlat5B1 <- resaleFlat5B %>% mutate(remaining_lease_bins = cut(remaining_lease_months, breaks = c(0,600,720,840,960, 1200))) %>% mutate(resale_price_bins = cut(resale_price, breaks = c(0,250000,500000,750000,1000000,1500000))) %>% mutate(floor_area_sqm_bins = cut(floor_area_sqm, breaks = c(0,90,110,130,160)))
+```
+
+```{r}
+ggbarstats(resaleFlat5B1,
+           x = resale_price_bins, 
+           y = floor_area_sqm_bins)
+```
+
+```{r}
+model <- lm(resale_price ~ month + town + flat_type + storey_range + 
+              floor_area_sqm + flat_model + remaining_lease_months, data = resaleFlat)
+```
+
+```{r}
+check_collinearity(model)
+```
+
+```{r}
+check_c <- check_collinearity(model)
+plot(check_c)
+```
+
+```{r}
+check_n <- check_normality(model)
+plot(check_n)
+```
+
+```{r}
+resaleFlat %>% ggplot(aes(x = town, 
+             y = resale_price)) +
+  stat_gradientinterval(   
+    fill = "skyblue",      
+    show.legend = TRUE     
+  ) +                        
+  labs(
+    title = "Visualising confidence intervals of mean resale price of HDB",
+    subtitle = "Gradient + interval plot")
+```
