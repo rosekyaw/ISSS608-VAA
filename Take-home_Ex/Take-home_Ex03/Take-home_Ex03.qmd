@@ -23,7 +23,7 @@ The raw data is downloaded from *Resale flat princes based on registration date 
 Install and load all the relevant libraries to use for visualization.
 
 ```{r}
-pacman::p_load(ggstatsplot,tidyverse,gganimate,performance, ggdist,highcharter,patchwork)
+pacman::p_load(ggstatsplot,tidyverse,gganimate,performance, ggdist,highcharter,patchwork,ggiraph)
 ```
 
 #### Import data
@@ -68,12 +68,24 @@ resaleFlat5B <- filter(resaleFlat,flat_type=="5 ROOM")
 The first visualisation is to display the mean resale price per sqm for individual town so that the user can determine the mean resale price fluctuation across towns. The final visualisation is sorted in ascending order fore resale price per sqm.
 
 ```{r}
+resaleFlatmean <- resaleFlat %>% group_by(town) %>% 
+  summarise(mean_resale_price_psm = mean(resale_price_psm))
+
+resaleFlatmeanSorted = resaleFlatmean[order(resaleFlatmean$mean_resale_price_psm),]
+
+pp <-  ggplot(resaleFlatmeanSorted, aes(x=town, y=mean_resale_price_psm)) + 
+  geom_bar_interactive(data = resaleFlatmeanSorted, stat="identity",aes(tooltip = mean_resale_price_psm))
+
+girafe(ggobj = pp )
+```
+
+```{r}
 options(highcharter.theme = hc_theme_smpl(tooltip = list(valueDecimals = 2)))
 
 resaleFlatmean <- resaleFlat %>% group_by(town) %>% 
   summarise(mean_resale_price_psm = mean(resale_price_psm))
 
-resaleFlatmeanSorted = resaleFlatmean[order(resaleFlatmean$mean_resale_price_psm),]
+
 
 hc <- resaleFlatmeanSorted %>% 
   hchart('column', hcaes(x = town, y = mean_resale_price_psm)) %>% 
