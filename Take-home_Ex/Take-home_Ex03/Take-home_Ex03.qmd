@@ -188,7 +188,6 @@ resaleFlat %>% ggplot(aes(x = flat_model,
 
 The confidence interval for different flat type is more or less similar to each other. Type S1 and S2 has higher resale price per sqm compared to the rest.
 
-# 
-4. The Learning Points
+# 4. The Learning Points
 
 Take-home exercise 3 can help me to familiarize with different analytics approach for statistical testing, building the linear regression model and visualising uncertainty. It also introduce me different librares and functions for visualisation and statistical analysis.
