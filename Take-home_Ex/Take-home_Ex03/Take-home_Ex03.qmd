@@ -23,12 +23,12 @@ The raw data is downloaded from *Resale flat princes based on registration date 
 Install and load all the relevant libraries to use for visualization.
 
 ```{r}
-pacman::p_load(ggstatsplot,tidyverse,gganimate,performance, ggdist,highcharter,patchwork,ggiraph)
+pacman::p_load(ggstatsplot,tidyverse,gganimate,performance, ggdist,highcharter,patchwork)
 ```
 
 #### Import data
 
-Raw data is imported from resaleFlatPrices2022.csv and put into resaleFlatRawdata frame.
+Raw data is imported from resaleFlatPrices2022.csv and put into resaleFlatRaw data frame.
 
 ```{r}
 resaleFlatRaw  <- read_csv("data/resaleFlatPrices2022.csv",show_col_types = FALSE) 
@@ -37,7 +37,7 @@ resaleFlatRaw  <- read_csv("data/resaleFlatPrices2022.csv",show_col_types = FALS
 
 #### Data Wrangling
 
-After the data is imported, all the number variables are converted into integers type so the statistical analysis can be applied to them. Data conversion of years to months is also done for remaining_lease variable. The resale_price_sqm variable is created to do better comparison between different room type flat.
+After the raw data is imported, all the number variables are converted into integers type so the statistical analysis can be applied to them. Data conversion of years to months is also done for remaining_lease variable. The resale_price_sqm variable is created to do better comparison between different flat types.
 
 First the remaining_lease column is extracted into remaining_lease_year and remaining_lease_month and converted into integer variables. Next, the NA is replaced with 0 for remaining_lease_month. Lastly, remaining_lease_months variable is created by adding up remaining_lease_year and remaining_lease_month into months.
 
@@ -52,32 +52,11 @@ resaleFlat <- resaleFlatRaw %>%
   mutate(remaining_lease_months=(remaining_lease_year*12)+remaining_lease_month)     %>% select(-c(remaining_lease_year,remaining_lease_month))
 ```
 
-Next, three data sets are generated based on the flat-type.
-
-```{r}
-resaleFlat3B <- filter(resaleFlat,flat_type=="3 ROOM")
-resaleFlat4B <- filter(resaleFlat,flat_type=="4 ROOM")
-resaleFlat5B <- filter(resaleFlat,flat_type=="5 ROOM")
-
-```
-
 # 3. The Visual Analytics
 
-#### Visualisation of Resale Price per Square Meter for Individual Town
+#### Visualisation of Mean Resale Price per Square Meter across Towns
 
-The first visualisation is to display the mean resale price per sqm for individual town so that the user can determine the mean resale price fluctuation across towns. The final visualisation is sorted in ascending order fore resale price per sqm.
-
-```{r}
-resaleFlatmean <- resaleFlat %>% group_by(town) %>% 
-  summarise(mean_resale_price_psm = mean(resale_price_psm))
-
-resaleFlatmeanSorted = resaleFlatmean[order(resaleFlatmean$mean_resale_price_psm),]
-
-pp <-  ggplot(resaleFlatmeanSorted, aes(x=town, y=mean_resale_price_psm)) + 
-  geom_bar_interactive(data = resaleFlatmeanSorted, stat="identity",aes(tooltip = mean_resale_price_psm))
-
-girafe(ggobj = pp )
-```
+The 1st visualisation is to display the mean resale price per sqm for individual town so that the user can determine the mean resale price fluctuation across towns. The final visualisation is sorted in ascending order for mean resale price per sqm.
 
 ```{r}
 options(highcharter.theme = hc_theme_smpl(tooltip = list(valueDecimals = 2)))
@@ -85,7 +64,7 @@ options(highcharter.theme = hc_theme_smpl(tooltip = list(valueDecimals = 2)))
 resaleFlatmean <- resaleFlat %>% group_by(town) %>% 
   summarise(mean_resale_price_psm = mean(resale_price_psm))
 
-
+resaleFlatmeanSorted = resaleFlatmean[order(resaleFlatmean$mean_resale_price_psm),]
 
 hc <- resaleFlatmeanSorted %>% 
   hchart('column', hcaes(x = town, y = mean_resale_price_psm)) %>% 
@@ -94,21 +73,26 @@ hc <- resaleFlatmeanSorted %>%
 hc
 ```
 
+Based on the bar chart above, it can be observed that central area has highest mean resale price per sqm while woodlands area ha s lowest mean resale price per sqm. It can deduced from the chart that most of the central region planning areas have higher mean resale price per sqm compared to other regions.
+
+#### Distribution of Resale Price per Square Meter in 2022
+
+The 2nd visualisation is to investigate whether mean resale price per sqm in 2022 is increased from mean resale price per sqm in 2021 which is \$4,839 according to the [MND](https://www.mnd.gov.sg/newsroom/parliament-matters/q-as/view/written-answer-by-ministry-of-national-development-on-the-increase-in-resale-hdb-prices-per-square-foot-excluding-resale-of-flats-under-the-design-build-and-sell-scheme-in-the-past-five-years#:~:text=The%20median%20HDB%20resale%20flat%20price%20per%20square%20metre%20was,2020%20and%20%244%2C839%20in%202021.). So, this is the `test.value` that will be used.
+
 ```{r}
-p1 <- gghistostats(data = resaleFlat3B, x = resale_price,type = "bayes", 
-                   xlab = "Resale Price", 
-                   title = "Distribution of Resale Prices for 3 Room HDB", 
-                   test.value = mean(resaleFlat3B$resale_price))
-p2 <- gghistostats(data = resaleFlat4B, x = resale_price, type = "bayes", 
-                   xlab = "Resale Price",
-                   title = "Distribution of Resale Prices for 4 Room HDB", 
-                   test.value = mean(resaleFlat4B$resale_price))
-p3 <- gghistostats(data = resaleFlat5B, x = resale_price, type = "bayes", 
-                   xlab = "Resale Price",
-                   title = "Distribution of Resale Prices for 5 Room HDB", 
-                   test.value = mean(resaleFlat5B$resale_price))
-p1/p2/p3
+p1 <- gghistostats(data = resaleFlat, x = resale_price_psm, 
+                   xlab = "Resale Price Per Sqm", 
+                   title = "Distribution of Resale Price Per Sqm for HDB in 2022", 
+                   test.value = 4839,
+                   centrality.parameter = "mean")
+p1
 ```
+
+As you can see from the graph above, the mean value of resale price per sqm in 2022 is significantly higher than the mean value of resale price per sqm in 2021. There is also extreme evidence provided by Bayes factor that the mean resale price per sqm in 2022 is higher compared to 2021.
+
+#### Comparison of Mean Resale Price per Square Meter between Different Flat Types
+
+The 3rd visualisation is compare the mean resale price per square meter for different flat types. It is also to check that the differences in mean resale price per sqm between flat types is statistically significant or not.
 
 ```{r}
 ggbetweenstats(
@@ -116,60 +100,73 @@ ggbetweenstats(
   x = flat_type, 
   y = resale_price_psm,
   type = "p",
-  mean.ci = TRUE, 
-  pairwise.comparisons = TRUE, 
-  pairwise.display = "s",
-  p.adjust.method = "fdr",
-  messages = FALSE
+  mean.ci = TRUE,
+  xlab = "Flat Type", 
+  ylab = "Resale Price Per Sqm",
+  title = "Comparison of Resale Price per Sqm across Flat Types in 2022"
 )
 ```
 
-```{r}
-resaleFlat3B1 <- resaleFlat3B %>% 
-  mutate(remaining_lease_bins = cut(remaining_lease_months, breaks = c(0,600,720,840,960, 1200))) %>% 
-  mutate(resale_price_bins = cut(resale_price, breaks = c(0,250000,500000,750000,1000000))) %>% 
-  mutate(floor_area_sqm_bins = cut(floor_area_sqm, breaks = c(0,50,70,90,110,140)))
+From the above chart, the mean resale price per sqm across flat types across different flat types is comparable to one another. Moreover, the distribution pattern across different flat type is similar.
 
-resaleFlat4B1 <- resaleFlat4B %>% 
-  mutate(remaining_lease_bins = cut(remaining_lease_months, breaks = c(0,600,720,840,960, 1200))) %>% 
-  mutate(resale_price_bins = cut(resale_price, breaks = c(0,250000,500000,750000,1000000,1500000))) %>% 
-  mutate(floor_area_sqm_bins = cut(floor_area_sqm, breaks = c(0,70,90,110,140)))
+#### Visualisation of Resale Price per Square Meter vs Floor Area in Square Meter
 
-resaleFlat5B1 <- resaleFlat5B %>% 
-  mutate(remaining_lease_bins = cut(remaining_lease_months, breaks = c(0,600,720,840,960, 1200))) %>% 
-  mutate(resale_price_bins = cut(resale_price, breaks = c(0,250000,500000,750000,1000000,1500000))) %>% 
-  mutate(floor_area_sqm_bins = cut(floor_area_sqm, breaks = c(0,90,110,130,160)))
+The 4th visualisation is to reveal the relationship between resale price per square meter and floor area in square meter.To do the visualisation, resale price per sqm and floor are in sqm are binned 4 bins.
 
+```{r fig.height = 7}
+resaleFlat1 <- resaleFlat %>% 
+  mutate(resale_price_psm_bins = cut(resale_price_psm, breaks = c(0,3333,6183,9033,11883,14733))) %>% 
+  mutate(floor_area_sqm_bins = cut(floor_area_sqm, breaks = c(0,30,60,90,120,160)))
 
-```
-
-```{r fig.height = 10}
-p11 <- ggbarstats(resaleFlat3B1,x = resale_price_bins,y = floor_area_sqm_bins,
-                  title = "Distribution Resale Price vs Floor Area Sqm")
-p22 <- ggbarstats(resaleFlat4B1,x = resale_price_bins,y = floor_area_sqm_bins,
-                  title = "Distribution Resale Price vs Floor Area Sqm")
-p33 <- ggbarstats(resaleFlat5B1,x = resale_price_bins,y = floor_area_sqm_bins,
-                  title = "Distribution Resale Price vs Floor Area Sqm")
-
-p11 / p22 / p33
+ggbarstats(resaleFlat1, 
+           x = resale_price_psm_bins, 
+           y = floor_area_sqm_bins, 
+           xlab = "Resale Price per Sqm",
+           ylab = "Floor Area Sqm",
+           legend.title = "Resale Price per Sqm Bins",
+           title = "Resale Price per Sqm vs Floor Area Sqm")
 
 ```
 
+From the resulting chart, it can be seen that most of the 30-60 sqm and 120-160 sqm of floor area are sold at lower resale price per sqm compared to 60-120 sqm of floor area. The highest resale price per sqm for 120-160 sqm of floor area is between \$6183 and \$9033 while The highest resale price per sqm for other floor area is between \$9033 and \$11883 It can be deduced that resale price per sqm for smaller room can be higher than the bigger room.
+
+#### 
+
+**Multiple Linear Regression Model**
+
+The multiple linear regression model is applied for resale price with different parameters such as flat model, storey range and so on.
+
 ```{r}
-model <- lm(resale_price ~ month + town + flat_type + storey_range + 
+model <- lm(resale_price_psm ~ month + town + storey_range + 
               floor_area_sqm + flat_model + remaining_lease_months, data = resaleFlat)
-check_collinearity(model)
+model
 ```
+
+Next step is to check the multicollinearity of different parameters to resale price.
 
 ```{r}
 check_c <- check_collinearity(model)
+check_c
+```
+
+```{r}
 plot(check_c)
 ```
+
+From the plot, it is illustrated that flat model and town plays more significant role to resale price per square meter while the rest of the parameters has less significant role.
+
+Next is checking normality of residuals for the model.
 
 ```{r}
 check_n <- check_normality(model)
 plot(check_n)
 ```
+
+From the plot it can be said that the the model residual failed to conform to normality assumption because residual histogram (in cyan colour) is not closed to the theretical histogram (i.e in green).
+
+**Visualizing the Uncertainty of Point Estimates**
+
+This visualisation is to display the distribution of resale price per sqm by flat model.
 
 ```{r}
 resaleFlat %>% ggplot(aes(x = flat_model, 
@@ -179,8 +176,9 @@ resaleFlat %>% ggplot(aes(x = flat_model,
     show.legend = TRUE     
   ) +                        
   labs(
-    title = "Visualising confidence intervals of mean resale price of HDB",
+    title = "Visualising confidence intervals of resale price per sqm of HDB in 2022",
     subtitle = "Gradient + interval plot") +
+    xlab("Flat Model") + ylab( "Resale Price per Sqm") +
   theme(plot.title = element_text(size=16, hjust=0.5),
         axis.title.x = element_text(size=15),
         axis.text.x = element_text(angle=45, hjust=1),
@@ -188,17 +186,9 @@ resaleFlat %>% ggplot(aes(x = flat_model,
 
 ```
 
-```{r}
-prices_by_town <- resaleFlat %>% group_by(town)
+The confidence interval for different flat type is more or less similar to each other. Type S1 and S2 has higher resale price per sqm compared to the rest.
 
-ggplot(prices_by_town, aes(x=reorder(town, resale_price_psm), y=resale_price_psm)) +
-  geom_boxplot() +
-  labs(title="Average Flat Resale Price (psm) by Town for all flat types ", 
-       x="Town", 
-       y="Resale Price ($ psm)") +
-  theme_classic() +
-  theme(plot.title = element_text(size=16, hjust=0.5),
-        axis.title.x = element_text(size=15),
-        axis.text.x = element_text(angle=45, hjust=1),
-        axis.title.y = element_text(size=15))  
-```
+# 
+4.The Learning Points
+
+Take-home exercise 3 can help me to familiarize with different analytics approach for statistical testing, building the linear regression model and visualising uncertainty. It also introduce me different librares and functions for visualisation and statistical analysis.

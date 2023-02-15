@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="YSYK">
-<meta name="dcterms.date" content="2023-02-14">
+<meta name="dcterms.date" content="2023-02-15">
 
 <title>ISSS608-VAA - Take-home Exercise 3</title>
 <style>
@@ -276,6 +276,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#the-task" id="toc-the-task" class="nav-link active" data-scroll-target="#the-task">1. The Task</a></li>
   <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">2. The Data</a></li>
   <li><a href="#the-visual-analytics" id="toc-the-visual-analytics" class="nav-link" data-scroll-target="#the-visual-analytics">3. The Visual Analytics</a></li>
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1"></a></li>
   </ul>
 </nav>
     </div>
@@ -301,7 +302,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 14, 2023</p>
+      <p class="date">February 15, 2023</p>
     </div>
   </div>
   
@@ -330,7 +331,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="import-data" class="level4">
 <h4 class="anchored" data-anchor-id="import-data">Import data</h4>
-<p>Raw data is imported from resaleFlatPrices2022.csv and put into resaleFlatRawdata frame.</p>
+<p>Raw data is imported from resaleFlatPrices2022.csv and put into resaleFlatRaw data frame.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -340,7 +341,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="data-wrangling" class="level4">
 <h4 class="anchored" data-anchor-id="data-wrangling">Data Wrangling</h4>
-<p>After the data is imported, all the number variables are converted into integers type so the statistical analysis can be applied to them. Data conversion of years to months is also done for remaining_lease variable. The resale_price_sqm variable is created to do better comparison between different room type flat.</p>
+<p>After the raw data is imported, all the number variables are converted into integers type so the statistical analysis can be applied to them. Data conversion of years to months is also done for remaining_lease variable. The resale_price_sqm variable is created to do better comparison between different flat types.</p>
 <p>First the remaining_lease column is extracted into remaining_lease_year and remaining_lease_month and converted into integer variables. Next, the NA is replaced with 0 for remaining_lease_month. Lastly, remaining_lease_months variable is created by adding up remaining_lease_year and remaining_lease_month into months.</p>
 <div class="cell">
 <details>
@@ -355,163 +356,234 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">remaining_lease_months=</span>(remaining_lease_year<span class="sc">*</span><span class="dv">12</span>)<span class="sc">+</span>remaining_lease_month)     <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(remaining_lease_year,remaining_lease_month))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Next, three data sets are generated based on the flat-type.</p>
-<div class="cell">
-<details>
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>resaleFlat3B <span class="ot">&lt;-</span> <span class="fu">filter</span>(resaleFlat,flat_type<span class="sc">==</span><span class="st">"3 ROOM"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>resaleFlat4B <span class="ot">&lt;-</span> <span class="fu">filter</span>(resaleFlat,flat_type<span class="sc">==</span><span class="st">"4 ROOM"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>resaleFlat5B <span class="ot">&lt;-</span> <span class="fu">filter</span>(resaleFlat,flat_type<span class="sc">==</span><span class="st">"5 ROOM"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
 </section>
 </section>
 <section id="the-visual-analytics" class="level1">
 <h1>3. The Visual Analytics</h1>
-<section id="visualisation-of-resale-price-per-square-meter-for-individual-town" class="level4">
-<h4 class="anchored" data-anchor-id="visualisation-of-resale-price-per-square-meter-for-individual-town">Visualisation of Resale Price per Square Meter for Individual Town</h4>
-<p>The first visualisation is to display the mean resale price per sqm for individual town so that the user can determine the mean resale price fluctuation across towns. The final visualisation is sorted in ascending order fore resale price per sqm.</p>
+<section id="visualisation-of-mean-resale-price-per-square-meter-across-towns" class="level4">
+<h4 class="anchored" data-anchor-id="visualisation-of-mean-resale-price-per-square-meter-across-towns">Visualisation of Mean Resale Price per Square Meter across Towns</h4>
+<p>The 1st visualisation is to display the mean resale price per sqm for individual town so that the user can determine the mean resale price fluctuation across towns. The final visualisation is sorted in ascending order for mean resale price per sqm.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">highcharter.theme =</span> <span class="fu">hc_theme_smpl</span>(<span class="at">tooltip =</span> <span class="fu">list</span>(<span class="at">valueDecimals =</span> <span class="dv">2</span>)))</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>resaleFlatmean <span class="ot">&lt;-</span> resaleFlat <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(town) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_resale_price_psm =</span> <span class="fu">mean</span>(resale_price_psm))</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>resaleFlatmeanSorted <span class="ot">=</span> resaleFlatmean[<span class="fu">order</span>(resaleFlatmean<span class="sc">$</span>mean_resale_price_psm),]</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>hc <span class="ot">&lt;-</span> resaleFlatmeanSorted <span class="sc">%&gt;%</span> </span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hchart</span>(<span class="st">'column'</span>, <span class="fu">hcaes</span>(<span class="at">x =</span> town, <span class="at">y =</span> mean_resale_price_psm)) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_title</span>(<span class="at">text=</span><span class="st">"HDB Mean Resale Price Per Sqm in 2022"</span>, <span class="at">align =</span> <span class="st">"center"</span>)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>hc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">highcharter.theme =</span> <span class="fu">hc_theme_smpl</span>(<span class="at">tooltip =</span> <span class="fu">list</span>(<span class="at">valueDecimals =</span> <span class="dv">2</span>)))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>resaleFlatmean <span class="ot">&lt;-</span> resaleFlat <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(town) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_resale_price_psm =</span> <span class="fu">mean</span>(resale_price_psm))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>resaleFlatmeanSorted <span class="ot">=</span> resaleFlatmean[<span class="fu">order</span>(resaleFlatmean<span class="sc">$</span>mean_resale_price_psm),]</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>hc <span class="ot">&lt;-</span> resaleFlatmeanSorted <span class="sc">%&gt;%</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hchart</span>(<span class="st">'column'</span>, <span class="fu">hcaes</span>(<span class="at">x =</span> town, <span class="at">y =</span> mean_resale_price_psm)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hc_title</span>(<span class="at">text=</span><span class="st">"HDB Mean Resale Price Per Sqm in 2022"</span>, <span class="at">align =</span> <span class="st">"center"</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>hc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 
-<div class="highchart html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-e5eb2e1afa6f2e23c2e7" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-e5eb2e1afa6f2e23c2e7">{"x":{"hc_opts":{"chart":{"reflow":true},"title":{"text":"HDB Mean Resale Price Per Sqm in 2022","align":"center"},"yAxis":{"title":{"text":"mean_resale_price_psm"},"type":"linear"},"credits":{"enabled":false},"exporting":{"enabled":false},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0,"showInLegend":false},"treemap":{"layoutAlgorithm":"squarified"},"scatter":{"marker":{"symbol":"circle"}}},"series":[{"group":"group","data":[{"town":"WOODLANDS","mean_resale_price_psm":4918.37918450826,"y":4918.37918450826,"name":"WOODLANDS"},{"town":"JURONG WEST","mean_resale_price_psm":4968.65378442659,"y":4968.65378442659,"name":"JURONG WEST"},{"town":"CHOA CHU KANG","mean_resale_price_psm":5001.31022860661,"y":5001.31022860661,"name":"CHOA CHU KANG"},{"town":"JURONG EAST","mean_resale_price_psm":5037.58273318459,"y":5037.58273318459,"name":"JURONG EAST"},{"town":"BUKIT PANJANG","mean_resale_price_psm":5134.86613128269,"y":5134.86613128269,"name":"BUKIT PANJANG"},{"town":"PASIR RIS","mean_resale_price_psm":5144.04563474942,"y":5144.04563474942,"name":"PASIR RIS"},{"town":"YISHUN","mean_resale_price_psm":5172.69780420155,"y":5172.69780420155,"name":"YISHUN"},{"town":"BEDOK","mean_resale_price_psm":5415.37053376271,"y":5415.37053376271,"name":"BEDOK"},{"town":"SEMBAWANG","mean_resale_price_psm":5420.61006582407,"y":5420.61006582407,"name":"SEMBAWANG"},{"town":"HOUGANG","mean_resale_price_psm":5481.32188537778,"y":5481.32188537778,"name":"HOUGANG"},{"town":"TAMPINES","mean_resale_price_psm":5492.52440485617,"y":5492.52440485617,"name":"TAMPINES"},{"town":"BUKIT BATOK","mean_resale_price_psm":5496.81087558002,"y":5496.81087558002,"name":"BUKIT BATOK"},{"town":"SENGKANG","mean_resale_price_psm":5616.45130167765,"y":5616.45130167765,"name":"SENGKANG"},{"town":"SERANGOON","mean_resale_price_psm":5753.88466943569,"y":5753.88466943569,"name":"SERANGOON"},{"town":"PUNGGOL","mean_resale_price_psm":5888.19167554731,"y":5888.19167554731,"name":"PUNGGOL"},{"town":"ANG MO KIO","mean_resale_price_psm":5939.67441184482,"y":5939.67441184482,"name":"ANG MO KIO"},{"town":"GEYLANG","mean_resale_price_psm":5997.54564991959,"y":5997.54564991959,"name":"GEYLANG"},{"town":"MARINE PARADE","mean_resale_price_psm":6400.69977090706,"y":6400.69977090706,"name":"MARINE PARADE"},{"town":"TOA PAYOH","mean_resale_price_psm":6537.80729617985,"y":6537.80729617985,"name":"TOA PAYOH"},{"town":"CLEMENTI","mean_resale_price_psm":6674.60630708255,"y":6674.60630708255,"name":"CLEMENTI"},{"town":"BISHAN","mean_resale_price_psm":6675.49320089613,"y":6675.49320089613,"name":"BISHAN"},{"town":"BUKIT TIMAH","mean_resale_price_psm":6738.79858443516,"y":6738.79858443516,"name":"BUKIT TIMAH"},{"town":"BUKIT MERAH","mean_resale_price_psm":7224.37398628721,"y":7224.37398628721,"name":"BUKIT MERAH"},{"town":"KALLANG/WHAMPOA","mean_resale_price_psm":7354.88864826796,"y":7354.88864826796,"name":"KALLANG/WHAMPOA"},{"town":"QUEENSTOWN","mean_resale_price_psm":7802.5558294357,"y":7802.5558294357,"name":"QUEENSTOWN"},{"town":"CENTRAL AREA","mean_resale_price_psm":8409.74795984353,"y":8409.74795984353,"name":"CENTRAL AREA"}],"type":"column"}],"xAxis":{"type":"category","title":{"text":"town"},"categories":null}},"theme":{"colors":["#d35400","#2980b9","#2ecc71","#f1c40f","#2c3e50","#7f8c8d"],"chart":{"style":{"fontFamily":"Roboto","color":"#666666"}},"title":{"align":"left","style":{"fontFamily":"Roboto Condensed","fontWeight":"bold"}},"subtitle":{"align":"left","style":{"fontFamily":"Roboto Condensed"}},"legend":{"align":"right","verticalAlign":"bottom"},"xAxis":{"gridLineWidth":1,"gridLineColor":"#F3F3F3","lineColor":"#F3F3F3","minorGridLineColor":"#F3F3F3","tickColor":"#F3F3F3","tickWidth":1},"yAxis":{"gridLineColor":"#F3F3F3","lineColor":"#F3F3F3","minorGridLineColor":"#F3F3F3","tickColor":"#F3F3F3","tickWidth":1},"plotOptions":{"line":{"marker":{"enabled":false}},"spline":{"marker":{"enabled":false}},"area":{"marker":{"enabled":false}},"areaspline":{"marker":{"enabled":false}},"arearange":{"marker":{"enabled":false}},"bubble":{"maxSize":"10%"}},"tooltip":{"valueDecimals":2}},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"chart","fonts":["Roboto","Roboto+Condensed"],"debug":false},"evals":[],"jsHooks":[]}</script>
+<div class="highchart html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-df747b1731cb8f943e72" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-df747b1731cb8f943e72">{"x":{"hc_opts":{"chart":{"reflow":true},"title":{"text":"HDB Mean Resale Price Per Sqm in 2022","align":"center"},"yAxis":{"title":{"text":"mean_resale_price_psm"},"type":"linear"},"credits":{"enabled":false},"exporting":{"enabled":false},"boost":{"enabled":false},"plotOptions":{"series":{"label":{"enabled":false},"turboThreshold":0,"showInLegend":false},"treemap":{"layoutAlgorithm":"squarified"},"scatter":{"marker":{"symbol":"circle"}}},"series":[{"group":"group","data":[{"town":"WOODLANDS","mean_resale_price_psm":4918.37918450826,"y":4918.37918450826,"name":"WOODLANDS"},{"town":"JURONG WEST","mean_resale_price_psm":4968.65378442659,"y":4968.65378442659,"name":"JURONG WEST"},{"town":"CHOA CHU KANG","mean_resale_price_psm":5001.31022860661,"y":5001.31022860661,"name":"CHOA CHU KANG"},{"town":"JURONG EAST","mean_resale_price_psm":5037.58273318459,"y":5037.58273318459,"name":"JURONG EAST"},{"town":"BUKIT PANJANG","mean_resale_price_psm":5134.86613128269,"y":5134.86613128269,"name":"BUKIT PANJANG"},{"town":"PASIR RIS","mean_resale_price_psm":5144.04563474942,"y":5144.04563474942,"name":"PASIR RIS"},{"town":"YISHUN","mean_resale_price_psm":5172.69780420155,"y":5172.69780420155,"name":"YISHUN"},{"town":"BEDOK","mean_resale_price_psm":5415.37053376271,"y":5415.37053376271,"name":"BEDOK"},{"town":"SEMBAWANG","mean_resale_price_psm":5420.61006582407,"y":5420.61006582407,"name":"SEMBAWANG"},{"town":"HOUGANG","mean_resale_price_psm":5481.32188537778,"y":5481.32188537778,"name":"HOUGANG"},{"town":"TAMPINES","mean_resale_price_psm":5492.52440485617,"y":5492.52440485617,"name":"TAMPINES"},{"town":"BUKIT BATOK","mean_resale_price_psm":5496.81087558002,"y":5496.81087558002,"name":"BUKIT BATOK"},{"town":"SENGKANG","mean_resale_price_psm":5616.45130167765,"y":5616.45130167765,"name":"SENGKANG"},{"town":"SERANGOON","mean_resale_price_psm":5753.88466943569,"y":5753.88466943569,"name":"SERANGOON"},{"town":"PUNGGOL","mean_resale_price_psm":5888.19167554731,"y":5888.19167554731,"name":"PUNGGOL"},{"town":"ANG MO KIO","mean_resale_price_psm":5939.67441184482,"y":5939.67441184482,"name":"ANG MO KIO"},{"town":"GEYLANG","mean_resale_price_psm":5997.54564991959,"y":5997.54564991959,"name":"GEYLANG"},{"town":"MARINE PARADE","mean_resale_price_psm":6400.69977090706,"y":6400.69977090706,"name":"MARINE PARADE"},{"town":"TOA PAYOH","mean_resale_price_psm":6537.80729617985,"y":6537.80729617985,"name":"TOA PAYOH"},{"town":"CLEMENTI","mean_resale_price_psm":6674.60630708255,"y":6674.60630708255,"name":"CLEMENTI"},{"town":"BISHAN","mean_resale_price_psm":6675.49320089613,"y":6675.49320089613,"name":"BISHAN"},{"town":"BUKIT TIMAH","mean_resale_price_psm":6738.79858443516,"y":6738.79858443516,"name":"BUKIT TIMAH"},{"town":"BUKIT MERAH","mean_resale_price_psm":7224.37398628721,"y":7224.37398628721,"name":"BUKIT MERAH"},{"town":"KALLANG/WHAMPOA","mean_resale_price_psm":7354.88864826796,"y":7354.88864826796,"name":"KALLANG/WHAMPOA"},{"town":"QUEENSTOWN","mean_resale_price_psm":7802.5558294357,"y":7802.5558294357,"name":"QUEENSTOWN"},{"town":"CENTRAL AREA","mean_resale_price_psm":8409.74795984353,"y":8409.74795984353,"name":"CENTRAL AREA"}],"type":"column"}],"xAxis":{"type":"category","title":{"text":"town"},"categories":null}},"theme":{"colors":["#d35400","#2980b9","#2ecc71","#f1c40f","#2c3e50","#7f8c8d"],"chart":{"style":{"fontFamily":"Roboto","color":"#666666"}},"title":{"align":"left","style":{"fontFamily":"Roboto Condensed","fontWeight":"bold"}},"subtitle":{"align":"left","style":{"fontFamily":"Roboto Condensed"}},"legend":{"align":"right","verticalAlign":"bottom"},"xAxis":{"gridLineWidth":1,"gridLineColor":"#F3F3F3","lineColor":"#F3F3F3","minorGridLineColor":"#F3F3F3","tickColor":"#F3F3F3","tickWidth":1},"yAxis":{"gridLineColor":"#F3F3F3","lineColor":"#F3F3F3","minorGridLineColor":"#F3F3F3","tickColor":"#F3F3F3","tickWidth":1},"plotOptions":{"line":{"marker":{"enabled":false}},"spline":{"marker":{"enabled":false}},"area":{"marker":{"enabled":false}},"areaspline":{"marker":{"enabled":false}},"arearange":{"marker":{"enabled":false}},"bubble":{"maxSize":"10%"}},"tooltip":{"valueDecimals":2}},"conf_opts":{"global":{"Date":null,"VMLRadialGradientURL":"http =//code.highcharts.com/list(version)/gfx/vml-radial-gradient.png","canvasToolsURL":"http =//code.highcharts.com/list(version)/modules/canvas-tools.js","getTimezoneOffset":null,"timezoneOffset":0,"useUTC":true},"lang":{"contextButtonTitle":"Chart context menu","decimalPoint":".","downloadCSV":"Download CSV","downloadJPEG":"Download JPEG image","downloadPDF":"Download PDF document","downloadPNG":"Download PNG image","downloadSVG":"Download SVG vector image","downloadXLS":"Download XLS","drillUpText":"◁ Back to {series.name}","exitFullscreen":"Exit from full screen","exportData":{"annotationHeader":"Annotations","categoryDatetimeHeader":"DateTime","categoryHeader":"Category"},"hideData":"Hide data table","invalidDate":null,"loading":"Loading...","months":["January","February","March","April","May","June","July","August","September","October","November","December"],"noData":"No data to display","numericSymbolMagnitude":1000,"numericSymbols":["k","M","G","T","P","E"],"printChart":"Print chart","resetZoom":"Reset zoom","resetZoomTitle":"Reset zoom level 1:1","shortMonths":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"shortWeekdays":["Sat","Sun","Mon","Tue","Wed","Thu","Fri"],"thousandsSep":" ","viewData":"View data table","viewFullscreen":"View in full screen","weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}},"type":"chart","fonts":["Roboto","Roboto+Condensed"],"debug":false},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
+<p>Based on the bar chart above, it can be observed that central area has highest mean resale price per sqm while woodlands area ha s lowest mean resale price per sqm. It can deduced from the chart that most of the central region planning areas have higher mean resale price per sqm compared to other regions.</p>
+</section>
+<section id="distribution-of-resale-price-per-square-meter-in-2022" class="level4">
+<h4 class="anchored" data-anchor-id="distribution-of-resale-price-per-square-meter-in-2022">Distribution of Resale Price per Square Meter in 2022</h4>
+<p>The 2nd visualisation is to investigate whether mean resale price per sqm in 2022 is increased from mean resale price per sqm in 2021 which is $4,839 according to the <a href="https://www.mnd.gov.sg/newsroom/parliament-matters/q-as/view/written-answer-by-ministry-of-national-development-on-the-increase-in-resale-hdb-prices-per-square-foot-excluding-resale-of-flats-under-the-design-build-and-sell-scheme-in-the-past-five-years#:~:text=The%20median%20HDB%20resale%20flat%20price%20per%20square%20metre%20was,2020%20and%20%244%2C839%20in%202021.">MND</a>. So, this is the <code>test.value</code> that will be used.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">gghistostats</span>(<span class="at">data =</span> resaleFlat3B, <span class="at">x =</span> resale_price,<span class="at">type =</span> <span class="st">"bayes"</span>, </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">xlab =</span> <span class="st">"Resale Price"</span>, </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">title =</span> <span class="st">"Distribution of Resale Prices for 3 Room HDB"</span>, </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">test.value =</span> <span class="fu">mean</span>(resaleFlat3B<span class="sc">$</span>resale_price))</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">gghistostats</span>(<span class="at">data =</span> resaleFlat4B, <span class="at">x =</span> resale_price, <span class="at">type =</span> <span class="st">"bayes"</span>, </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">xlab =</span> <span class="st">"Resale Price"</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">title =</span> <span class="st">"Distribution of Resale Prices for 4 Room HDB"</span>, </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">test.value =</span> <span class="fu">mean</span>(resaleFlat4B<span class="sc">$</span>resale_price))</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">gghistostats</span>(<span class="at">data =</span> resaleFlat5B, <span class="at">x =</span> resale_price, <span class="at">type =</span> <span class="st">"bayes"</span>, </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                   <span class="at">xlab =</span> <span class="st">"Resale Price"</span>,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">title =</span> <span class="st">"Distribution of Resale Prices for 5 Room HDB"</span>, </span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                   <span class="at">test.value =</span> <span class="fu">mean</span>(resaleFlat5B<span class="sc">$</span>resale_price))</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>p1<span class="sc">/</span>p2<span class="sc">/</span>p3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">gghistostats</span>(<span class="at">data =</span> resaleFlat, <span class="at">x =</span> resale_price_psm, </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">xlab =</span> <span class="st">"Resale Price Per Sqm"</span>, </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">title =</span> <span class="st">"Distribution of Resale Price Per Sqm for HDB in 2022"</span>, </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">test.value =</span> <span class="dv">4839</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">centrality.parameter =</span> <span class="st">"mean"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>As you can see from the graph above, the mean value of resale price per sqm in 2022 is significantly higher than the mean value of resale price per sqm in 2021. There is also extreme evidence provided by Bayes factor that the mean resale price per sqm in 2022 is higher compared to 2021.</p>
+</section>
+<section id="comparison-of-mean-resale-price-per-square-meter-between-different-flat-types" class="level4">
+<h4 class="anchored" data-anchor-id="comparison-of-mean-resale-price-per-square-meter-between-different-flat-types">Comparison of Mean Resale Price per Square Meter between Different Flat Types</h4>
+<p>The 3rd visualisation is compare the mean resale price per square meter for different flat types. It is also to check that the differences in mean resale price per sqm between flat types is statistically significant or not.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbetweenstats</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> resaleFlat,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> flat_type, </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> resale_price_psm,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"p"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean.ci =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Flat Type"</span>, </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Resale Price Per Sqm"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Comparison of Resale Price per Sqm across Flat Types in 2022"</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>From the above chart, the mean resale price per sqm across flat types across different flat types is comparable to one another. Moreover, the distribution pattern across different flat type is similar.</p>
+</section>
+<section id="visualisation-of-resale-price-per-square-meter-vs-floor-area-in-square-meter" class="level4">
+<h4 class="anchored" data-anchor-id="visualisation-of-resale-price-per-square-meter-vs-floor-area-in-square-meter">Visualisation of Resale Price per Square Meter vs Floor Area in Square Meter</h4>
+<p>The 4th visualisation is to reveal the relationship between resale price per square meter and floor area in square meter.To do the visualisation, resale price per sqm and floor are in sqm are binned 4 bins.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbetweenstats</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> resaleFlat,</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> flat_type, </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> resale_price_psm,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"p"</span>,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean.ci =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pairwise.comparisons =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pairwise.display =</span> <span class="st">"s"</span>,</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">p.adjust.method =</span> <span class="st">"fdr"</span>,</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">messages =</span> <span class="cn">FALSE</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>resaleFlat1 <span class="ot">&lt;-</span> resaleFlat <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">resale_price_psm_bins =</span> <span class="fu">cut</span>(resale_price_psm, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">3333</span>,<span class="dv">6183</span>,<span class="dv">9033</span>,<span class="dv">11883</span>,<span class="dv">14733</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">floor_area_sqm_bins =</span> <span class="fu">cut</span>(floor_area_sqm, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">30</span>,<span class="dv">60</span>,<span class="dv">90</span>,<span class="dv">120</span>,<span class="dv">160</span>)))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbarstats</span>(resaleFlat1, </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> resale_price_psm_bins, </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> floor_area_sqm_bins, </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">xlab =</span> <span class="st">"Resale Price per Sqm"</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">ylab =</span> <span class="st">"Floor Area Sqm"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">legend.title =</span> <span class="st">"Resale Price per Sqm Bins"</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">title =</span> <span class="st">"Resale Price per Sqm vs Floor Area Sqm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>From the resulting chart, it can be seen that most of the 30-60 sqm and 120-160 sqm of floor area are sold at lower resale price per sqm compared to 60-120 sqm of floor area. The highest resale price per sqm for 120-160 sqm of floor area is between $6183 and $9033 while The highest resale price per sqm for other floor area is between $9033 and $11883 It can be deduced that resale price per sqm for smaller room can be higher than the bigger room.</p>
+</section>
+<section id="section" class="level4">
+<h4 class="anchored" data-anchor-id="section"></h4>
+<p><strong>Multiple Linear Regression Model</strong></p>
+<p>The multiple linear regression model is applied for resale price with different parameters such as flat model, storey range and so on.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>resaleFlat3B1 <span class="ot">&lt;-</span> resaleFlat3B <span class="sc">%&gt;%</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">remaining_lease_bins =</span> <span class="fu">cut</span>(remaining_lease_months, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">600</span>,<span class="dv">720</span>,<span class="dv">840</span>,<span class="dv">960</span>, <span class="dv">1200</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">resale_price_bins =</span> <span class="fu">cut</span>(resale_price, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">250000</span>,<span class="dv">500000</span>,<span class="dv">750000</span>,<span class="dv">1000000</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">floor_area_sqm_bins =</span> <span class="fu">cut</span>(floor_area_sqm, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">50</span>,<span class="dv">70</span>,<span class="dv">90</span>,<span class="dv">110</span>,<span class="dv">140</span>)))</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>resaleFlat4B1 <span class="ot">&lt;-</span> resaleFlat4B <span class="sc">%&gt;%</span> </span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">remaining_lease_bins =</span> <span class="fu">cut</span>(remaining_lease_months, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">600</span>,<span class="dv">720</span>,<span class="dv">840</span>,<span class="dv">960</span>, <span class="dv">1200</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">resale_price_bins =</span> <span class="fu">cut</span>(resale_price, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">250000</span>,<span class="dv">500000</span>,<span class="dv">750000</span>,<span class="dv">1000000</span>,<span class="dv">1500000</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">floor_area_sqm_bins =</span> <span class="fu">cut</span>(floor_area_sqm, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">70</span>,<span class="dv">90</span>,<span class="dv">110</span>,<span class="dv">140</span>)))</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>resaleFlat5B1 <span class="ot">&lt;-</span> resaleFlat5B <span class="sc">%&gt;%</span> </span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">remaining_lease_bins =</span> <span class="fu">cut</span>(remaining_lease_months, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">600</span>,<span class="dv">720</span>,<span class="dv">840</span>,<span class="dv">960</span>, <span class="dv">1200</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">resale_price_bins =</span> <span class="fu">cut</span>(resale_price, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">250000</span>,<span class="dv">500000</span>,<span class="dv">750000</span>,<span class="dv">1000000</span>,<span class="dv">1500000</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">floor_area_sqm_bins =</span> <span class="fu">cut</span>(floor_area_sqm, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">90</span>,<span class="dv">110</span>,<span class="dv">130</span>,<span class="dv">160</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(resale_price_psm <span class="sc">~</span> month <span class="sc">+</span> town <span class="sc">+</span> storey_range <span class="sc">+</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>              floor_area_sqm <span class="sc">+</span> flat_model <span class="sc">+</span> remaining_lease_months, <span class="at">data =</span> resaleFlat)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = resale_price_psm ~ month + town + storey_range + 
+    floor_area_sqm + flat_model + remaining_lease_months, data = resaleFlat)
+
+Coefficients:
+                     (Intercept)                      month2022-02  
+                        1718.924                            40.341  
+                    month2022-03                      month2022-04  
+                          72.452                           148.689  
+                    month2022-05                      month2022-06  
+                         181.689                           251.271  
+                    month2022-07                      month2022-08  
+                         295.773                           306.500  
+                    month2022-09                      month2022-10  
+                         386.920                           438.789  
+                    month2022-11                      month2022-12  
+                         453.446                           490.672  
+                       townBEDOK                        townBISHAN  
+                        -280.283                           784.252  
+                 townBUKIT BATOK                   townBUKIT MERAH  
+                        -864.458                          1003.111  
+               townBUKIT PANJANG                   townBUKIT TIMAH  
+                       -1435.395                          1538.595  
+                townCENTRAL AREA                 townCHOA CHU KANG  
+                        1394.661                         -1665.866  
+                    townCLEMENTI                       townGEYLANG  
+                         240.825                           355.438  
+                     townHOUGANG                   townJURONG EAST  
+                        -827.032                          -921.221  
+                 townJURONG WEST               townKALLANG/WHAMPOA  
+                       -1330.377                           681.763  
+               townMARINE PARADE                     townPASIR RIS  
+                        1318.809                          -962.931  
+                     townPUNGGOL                    townQUEENSTOWN  
+                       -1445.643                          1093.563  
+                   townSEMBAWANG                      townSENGKANG  
+                       -1594.610                         -1521.392  
+                   townSERANGOON                      townTAMPINES  
+                          29.056                          -504.296  
+                   townTOA PAYOH                     townWOODLANDS  
+                         493.312                         -1543.226  
+                      townYISHUN              storey_range04 TO 06  
+                       -1189.617                           185.602  
+            storey_range07 TO 09              storey_range10 TO 12  
+                         339.910                           419.979  
+            storey_range13 TO 15              storey_range16 TO 18  
+                         523.890                           739.191  
+            storey_range19 TO 21              storey_range22 TO 24  
+                        1025.045                          1164.541  
+            storey_range25 TO 27              storey_range28 TO 30  
+                        1384.468                          1761.702  
+            storey_range31 TO 33              storey_range34 TO 36  
+                        1885.688                          2026.521  
+            storey_range37 TO 39              storey_range40 TO 42  
+                        2207.980                          2450.416  
+            storey_range43 TO 45              storey_range46 TO 48  
+                        2662.916                          3437.031  
+            storey_range49 TO 51                    floor_area_sqm  
+                        2908.513                            -6.039  
+         flat_modelAdjoined flat                    flat_modelDBSS  
+                         174.458                          1322.658  
+              flat_modelImproved     flat_modelImproved-Maisonette  
+                          52.275                          1647.555  
+               flat_modelModel A      flat_modelModel A-Maisonette  
+                          33.494                          1145.945  
+              flat_modelModel A2          flat_modelNew Generation  
+                          78.316                           232.176  
+     flat_modelPremium Apartment  flat_modelPremium Apartment Loft  
+                         258.855                           981.651  
+            flat_modelSimplified                flat_modelStandard  
+                         395.000                           157.229  
+               flat_modelTerrace                 flat_modelType S1  
+                        4035.515                          2062.109  
+               flat_modelType S2            remaining_lease_months  
+                        1950.796                             5.038  </code></pre>
 </div>
+</div>
+<p>Next step is to check the multicollinearity of different parameters to resale price.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>p11 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(resaleFlat3B1,<span class="at">x =</span> resale_price_bins,<span class="at">y =</span> floor_area_sqm_bins,</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">title =</span> <span class="st">"Distribution Resale Price vs Floor Area Sqm"</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>p22 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(resaleFlat4B1,<span class="at">x =</span> resale_price_bins,<span class="at">y =</span> floor_area_sqm_bins,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">title =</span> <span class="st">"Distribution Resale Price vs Floor Area Sqm"</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>p33 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(resaleFlat5B1,<span class="at">x =</span> resale_price_bins,<span class="at">y =</span> floor_area_sqm_bins,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">title =</span> <span class="st">"Distribution Resale Price vs Floor Area Sqm"</span>)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>p11 <span class="sc">/</span> p22 <span class="sc">/</span> p33</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<details>
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(resale_price <span class="sc">~</span> month <span class="sc">+</span> town <span class="sc">+</span> flat_type <span class="sc">+</span> storey_range <span class="sc">+</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>              floor_area_sqm <span class="sc">+</span> flat_model <span class="sc">+</span> remaining_lease_months, <span class="at">data =</span> resaleFlat)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">check_collinearity</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>check_c <span class="ot">&lt;-</span> <span class="fu">check_collinearity</span>(model)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>check_c</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># Check for Multicollinearity
 
 Low Correlation
 
-       Term   VIF     VIF 95% CI Increased SE Tolerance Tolerance 95% CI
-      month  1.03   [1.02, 1.05]         1.02      0.97     [0.95, 0.98]
-       town  7.55   [7.38, 7.73]         2.75      0.13     [0.13, 0.14]
- flat_model 28.79 [28.09, 29.51]         5.37      0.03     [0.03, 0.04]
+                   Term  VIF   VIF 95% CI Increased SE Tolerance
+                  month 1.03 [1.02, 1.05]         1.02      0.97
+         floor_area_sqm 1.46 [1.44, 1.48]         1.21      0.69
+ remaining_lease_months 2.47 [2.42, 2.52]         1.57      0.41
+             flat_model 8.75 [8.55, 8.96]         2.96      0.11
+ Tolerance 95% CI
+     [0.95, 0.98]
+     [0.67, 0.70]
+     [0.40, 0.41]
+     [0.11, 0.12]
 
 Moderate Correlation
 
          Term  VIF   VIF 95% CI Increased SE Tolerance Tolerance 95% CI
- storey_range 1.94 [1.91, 1.98]         1.39      0.51     [0.51, 0.52]
-
-High Correlation
-
-                   Term   VIF     VIF 95% CI Increased SE Tolerance
- remaining_lease_months  3.27   [3.21, 3.34]         1.81      0.31
-              flat_type 35.92 [35.05, 36.82]         5.99      0.03
-         floor_area_sqm 17.76 [17.33, 18.20]         4.21      0.06
- Tolerance 95% CI
-     [0.30, 0.31]
-     [0.03, 0.03]
-     [0.05, 0.06]</code></pre>
+ storey_range 1.93 [1.90, 1.97]         1.39      0.52     [0.51, 0.53]
+         town 6.81 [6.65, 6.97]         2.61      0.15     [0.14, 0.15]</code></pre>
 </div>
 </div>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>check_c <span class="ot">&lt;-</span> <span class="fu">check_collinearity</span>(model)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(check_c)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(check_c)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>From the plot, it is illustrated that flat model and town plays more significant role to resale price per square meter while the rest of the parameters has less significant role.</p>
+<p>Next is checking normality of residuals for the model.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -519,9 +591,12 @@ High Correlation
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(check_n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>From the plot it can be said that the the model residual failed to conform to normality assumption because residual histogram (in cyan colour) is not closed to the theretical histogram (i.e in green).</p>
+<p><strong>Visualizing the Uncertainty of Point Estimates</strong></p>
+<p>This visualisation is to display the distribution of resale price per sqm by flat model.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -532,40 +607,27 @@ High Correlation
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">show.legend =</span> <span class="cn">TRUE</span>     </span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span>                        </span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Visualising confidence intervals of mean resale price of HDB"</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Visualising confidence intervals of resale price per sqm of HDB in 2022"</span>,</span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Gradient + interval plot"</span>) <span class="sc">+</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>, <span class="at">hjust=</span><span class="fl">0.5</span>),</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">15</span>),</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>),</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">15</span>))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Flat Model"</span>) <span class="sc">+</span> <span class="fu">ylab</span>( <span class="st">"Resale Price per Sqm"</span>) <span class="sc">+</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>, <span class="at">hjust=</span><span class="fl">0.5</span>),</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">15</span>),</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>),</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">15</span>))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<div class="cell">
-<details>
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>prices_by_town <span class="ot">&lt;-</span> resaleFlat <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(town)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(prices_by_town, <span class="fu">aes</span>(<span class="at">x=</span><span class="fu">reorder</span>(town, resale_price_psm), <span class="at">y=</span>resale_price_psm)) <span class="sc">+</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Average Flat Resale Price (psm) by Town for all flat types "</span>, </span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Town"</span>, </span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Resale Price ($ psm)"</span>) <span class="sc">+</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">16</span>, <span class="at">hjust=</span><span class="fl">0.5</span>),</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">15</span>),</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>),</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">15</span>))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-
-
+<p>The confidence interval for different flat type is more or less similar to each other. Type S1 and S2 has higher resale price per sqm compared to the rest.</p>
 </section>
+</section>
+<section id="section-1" class="level1">
+<h1></h1>
+<p>4.The Learning Points</p>
+<p>Take-home exercise 3 can help me to familiarize with different analytics approach for statistical testing, building the linear regression model and visualising uncertainty. It also introduce me different librares and functions for visualisation and statistical analysis.</p>
+
+
 </section>
 
 </main> <!-- /main -->
