@@ -1,0 +1,20 @@
+---
+title: "Take-home Exercise 4"
+author: "YSYK"
+date: "`r Sys.Date()`"
+execute: 
+  warning: false
+format:
+  html:
+    code-fold: true
+    code-summary: "Show the code"
+---
+
+```{r}
+pacman::p_load(ggstatsplot,tidyverse,gganimate)
+```
+
+```{r}
+imports  <- read_csv("data/imports.csv",show_col_types = FALSE) 
+exports  <- read_csv("data/exports.csv",show_col_types = FALSE) 
+```
