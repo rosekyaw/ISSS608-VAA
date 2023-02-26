@@ -10,11 +10,494 @@ format:
     code-summary: "Show the code"
 ---
 
+# 1. The Task
+
+The task is to analyse the impact of COVID-19 as well as the global economic and political dynamic on Singapore bi-lateral trade (import, export) from 2020 to 2022. The various visualisation methods such as interactive visualisation are used to enhance user's data discovery experiences.
+
+# 2. The Data
+
+The data is downloaded from Merchandise Trade by Region/Market section from [Department of Statistics, Singapore](https://www.singstat.gov.sg/find-data/search-by-theme/trade-and-investment/merchandise-trade/latest-data). The data include both import and export data from Jan 1976 to Jan 2023. Since the visualisation focus on Jan 2020 to Dec 2022, the imported data has been cleaned up to contain data from 2020 to 2022 only. The data is separated into two excel file called; imports and exports.
+
+# 3. The Visual Analytics
+
+### Install packages and load libraries
+
+Install and load all the relevant libraries to use for visualization.
+
 ```{r}
-pacman::p_load(ggstatsplot,tidyverse,gganimate)
+pacman::p_load(scales, viridis, lubridate, ggthemes, readxl, knitr, data.table, CGPfunctions, ggHoriPlot,tidyverse,gganimate,skimr,kableExtra,patchwork,png,gifski)
+```
+
+### Import data
+
+The raw data frames are created by reading excel files. Then, *Year-Month* variable is changed into year and month format and the values in all the countries' column are adjusted accordingly based on value indicator in individual column's name. The final step is to drop the value indicator from the columns's name.
+
+```{r}
+importraw  <- read_xlsx("data/imports.xlsx") %>% 
+  mutate(`Year-Month`=ym(`Year-Month`)) %>% 
+  mutate_at(vars(contains('Thousand Dollars')), ~ (. *1000)) %>%      
+  mutate_at(vars(contains('Million Dollars')), ~ (. *1000000))
+
+colnames(importraw) <- gsub(" (Thousand Dollars)", "", colnames(importraw), fixed = TRUE)
+colnames(importraw) <- gsub(" (Million Dollars)", "", colnames(importraw), fixed = TRUE)
+
+exportraw  <- read_xlsx("data/exports.xlsx") %>% 
+  mutate(`Year-Month`=ym(`Year-Month`)) %>% 
+  mutate_at(vars(contains('Thousand Dollars')), ~ (. *1000)) %>%      
+  mutate_at(vars(contains('Million Dollars')), ~ (. *1000000))
+  
+colnames(exportraw) <- gsub(" (Thousand Dollars)", "", colnames(exportraw), fixed = TRUE)
+colnames(exportraw) <- gsub(" (Million Dollars)", "", colnames(exportraw), fixed = TRUE)
+```
+
+### Data Wrangling
+
+The imported data frames are pivoted to longer with all the countries are put in *Countries* column and the values are transformed into numerical and put in *Amounts* column .
+
+```{r}
+imports <- importraw %>%
+  pivot_longer(                                         
+     cols = `Total Merchandise Imports`:`Commonwealth Of Independent States`, 
+     names_to = "Countries",
+     values_transform = as.numeric,
+     values_to = "Amounts")
+
+exports <- exportraw %>%
+  pivot_longer(                                         
+     cols = `Total Merchandise Exports`:`Other Countries In Oceania`, 
+     names_to = "Countries",
+     values_transform = as.numeric,
+     values_to = "Amounts")
+
+```
+
+Then, *month* and *year* variables are extracted from *Year-Month* variable and changed into time format.
+
+```{r}
+imports$month <- factor(month(imports$`Year-Month`), 
+                    levels=1:12, 
+                    labels=month.abb, 
+                    ordered=TRUE) 
+exports$month <- factor(month(exports$`Year-Month`), 
+                    levels=1:12, 
+                    labels=month.abb, 
+                    ordered=TRUE) 
+
+imports$year <- year(ymd(imports$`Year-Month`))
+exports$year <- year(ymd(exports$`Year-Month`))
+
+```
+
+### Imports vs Exports Visualisation Using **Cycle Plot**
+
+Cycle plot can reveal the trend of the data. It is the quickest way to reveal how the data has changed over time. The cycle plot is used to create comparison between monthly imports and exports changes from 2020 to 2022.
+
+#### Data Preparation
+
+The combined data of imports and exports for each region of the world is created. They are *Asia*, *Europe*, *EU*, *America*, *Oceania* and *Africa.*
+
+```{r}
+
+Asia <- rbind(imports %>% filter(Countries=="Asia") %>% mutate(Type="import"), 
+              exports %>% filter(Countries=="Asia") %>% mutate(Type="export"))
+
+Europe <- rbind(imports %>% 
+      filter(Countries=="Europe") %>% mutate(Type="import"),
+      exports %>% 
+      filter(Countries=="Europe") %>% mutate(Type="export"))
+
+EU <- rbind(imports %>% 
+      filter(Countries=="European Union") %>% mutate(Type="import"),
+      exports %>% 
+      filter(Countries=="European Union") %>% mutate(Type="export"))
+
+America <- rbind(imports %>% 
+           filter(Countries=="America") %>% mutate(Type="import"),
+           exports %>% filter(Countries=="America") %>% mutate(Type="export"))
+
+Oceania <- rbind(imports %>% 
+           filter(Countries=="Oceania") %>% mutate(Type="import"),
+           exports %>% 
+           filter(Countries=="Oceania") %>% mutate(Type="export"))
+
+Africa <- rbind(imports %>% 
+          filter(Countries=="Africa") %>% mutate(Type="import"),
+          exports %>% filter(Countries=="Africa") %>% mutate(Type="export"))
+
+```
+
+#### Cycle Plot
+
+Firstly, the average value of imports and exports for each year is calculated to put as a reference line. Next, *geom_line* is used to draw the cycle plot with *year* as group and *Type* as color. The three cycle plot is produced to represent each year.
+
+::: panel-tabset
+##### Asia
+
+```{r}
+hlineAsiaI.data <- Asia %>% filter(Type=="import") %>%
+  group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
+
+hlineAsiaE.data <- Asia %>% filter(Type=="export") %>%
+  group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
+
+ggplot() + 
+  geom_line(data=Asia %>% filter(Type=="import"),
+            aes(x=month, 
+                y=Amounts/1000000, 
+                group=year,
+            color=Type)) +
+  geom_line(data=Asia %>% filter(Type=="export"),
+            aes(x=month, 
+                y=Amounts/1000000, 
+                group=year,
+            color=Type)) +
+  geom_hline(aes(yintercept=avgvalue), 
+             data=hlineAsiaI.data, 
+             linetype=6, 
+             colour="lightgray", 
+             linewidth=0.5) + 
+  geom_hline(aes(yintercept=avgvalue), 
+             data=hlineAsiaE.data, 
+             linetype=6, 
+             colour="darkgray", 
+             linewidth=0.5) +
+  facet_grid(~year) +
+  theme(axis.text.x = element_text(angle=45)) +
+  labs(axis.text.x = element_blank(),
+       title = "Singapore Imports vs Exports with Asia, Jan 2020-Dec 2022") +
+  xlab("") +
+  ylab("Millions")
+```
+
+From the plot, it can be seen that, the import and export with Asia mirror each other with 2020 being lowest and 2022 being highest. The export to Asia from Singapore is higher than import from Asia to Singapore.
+
+##### Europe
+
+```{r}
+hlineEuropeI.data <- Europe %>% filter(Type=="import") %>%
+  group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
+
+hlineEuropeE.data <- Europe %>% filter(Type=="export") %>%
+  group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
+
+ggplot() + 
+  geom_line(data=Europe %>% filter(Type=="import"),
+            aes(x=month, 
+                y=Amounts/1000000, 
+                group=year,
+            color=Type)) +
+  geom_line(data=Europe %>% filter(Type=="export"),
+            aes(x=month, 
+                y=Amounts/1000000, 
+                group=year,
+            color=Type)) +
+  geom_hline(aes(yintercept=avgvalue), 
+             data=hlineEuropeI.data, 
+             linetype=6, 
+             colour="lightgray", 
+             linewidth=0.5) + 
+  geom_hline(aes(yintercept=avgvalue), 
+             data=hlineEuropeE.data, 
+             linetype=6, 
+             colour="darkgray", 
+             linewidth=0.5) +
+  facet_grid(~year) +
+  theme(axis.text.x = element_text(angle=45)) +
+  labs(axis.text.x = element_blank(),
+       title = "Singapore Imports vs Exports with Europe, Jan 2020-Dec 2022") +
+  xlab("") +
+  ylab("Millions")
+```
+
+From the plot, it can be seen that import from Europe to Singapore is higher than export from Singapore to Europe. There is trade surge in March 2021 which might be the starting of economic recovery of Singapore.
+
+##### European Union
+
+```{r}
+hlineEUI.data <- EU %>% filter(Type=="import") %>%
+  group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
+
+hlineEUE.data <- EU %>% filter(Type=="export") %>%
+  group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
+
+ggplot() + 
+  geom_line(data=EU %>% filter(Type=="import"),
+            aes(x=month, 
+                y=Amounts/1000000, 
+                group=year,
+            color=Type)) +
+  geom_line(data=EU %>% filter(Type=="export"),
+            aes(x=month, 
+                y=Amounts/1000000, 
+                group=year,
+            color=Type)) +
+  geom_hline(aes(yintercept=avgvalue), 
+             data=hlineEUI.data, 
+             linetype=6, 
+             colour="lightgray", 
+             linewidth=0.5) + 
+  geom_hline(aes(yintercept=avgvalue), 
+             data=hlineEUE.data, 
+             linetype=6, 
+             colour="darkgray", 
+             linewidth=0.5) +
+  facet_grid(~year) +
+  theme(axis.text.x = element_text(angle=45)) +
+  labs(axis.text.x = element_blank(),
+       title = "Singapore Imports vs Exports with European Union, Jan 2020-Dec 2022") +
+  xlab("") +
+  ylab("Millions")
+```
+
+The trade between Singapore and European Union is fluctuating throughout the year according to graph for both 2020 and 2022. However, import from European Union is higher than export from Singapore in 2021.
+
+##### America
+
+```{r}
+hlineAmericaI.data <- America %>% filter(Type=="import") %>%
+  group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
+
+hlineAmericaE.data <- America %>% filter(Type=="export") %>%
+  group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
+
+ggplot() + 
+  geom_line(data=America %>% filter(Type=="import"),
+            aes(x=month, 
+                y=Amounts/1000000, 
+                group=year,
+            color=Type)) +
+  geom_line(data=America %>% filter(Type=="export"),
+            aes(x=month, 
+                y=Amounts/1000000, 
+                group=year,
+            color=Type)) +
+  geom_hline(aes(yintercept=avgvalue), 
+             data=hlineAmericaI.data, 
+             linetype=6, 
+             colour="lightgray", 
+             linewidth=0.5) + 
+  geom_hline(aes(yintercept=avgvalue), 
+             data=hlineAmericaE.data, 
+             linetype=6, 
+             colour="darkgray", 
+             linewidth=0.5) +
+  facet_grid(~year) +
+  theme(axis.text.x = element_text(angle=45)) +
+  labs(axis.text.x = element_blank(),
+       title = "Singapore Imports vs Exports with America, Jan 2020-Dec 2022") +
+  xlab("") +
+  ylab("Millions")
+```
+
+The trade between Singapore and America is changing throughout the year. While the export amount in 2020 is higher than import amount, the opposite is true for 2022.
+
+##### Oceania
+
+```{r}
+hlineOceaniaI.data <- Oceania %>% filter(Type=="import") %>%
+  group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
+
+hlineOceaniaE.data <- Oceania %>% filter(Type=="export") %>%
+  group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
+
+ggplot() + 
+  geom_line(data=Oceania %>% filter(Type=="import"),
+            aes(x=month, 
+                y=Amounts/1000000, 
+                group=year,
+            color=Type)) +
+  geom_line(data=Oceania %>% filter(Type=="export"),
+            aes(x=month, 
+                y=Amounts/1000000, 
+                group=year,
+            color=Type)) +
+  geom_hline(aes(yintercept=avgvalue), 
+             data=hlineOceaniaI.data, 
+             linetype=6, 
+             colour="lightgray", 
+             linewidth=0.5) + 
+  geom_hline(aes(yintercept=avgvalue), 
+             data=hlineOceaniaE.data, 
+             linetype=6, 
+             colour="darkgray", 
+             linewidth=0.5) +
+  facet_grid(~year) +
+  theme(axis.text.x = element_text(angle=45)) +
+  labs(axis.text.x = element_blank(),
+       title = "Singapore Imports vs Exports with Oceania, Jan 2020-Dec 2022") +
+  xlab("") +
+  ylab("Millions")
+```
+
+The plot reveals that the export from Singapore to Oceania is always higher than import from Oceania to Singapore. The export shows the upwards trend from 2020 to 2022.
+
+##### Africa
+
+```{r}
+hlineAfricaI.data <- Africa %>% filter(Type=="import") %>%
+  group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
+
+hlineAfricaE.data <- Africa %>% filter(Type=="export") %>%
+  group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
+
+ggplot() + 
+  geom_line(data=Africa %>% filter(Type=="import"),
+            aes(x=month, 
+                y=Amounts/1000000, 
+                group=year,
+            color=Type)) +
+  geom_line(data=Africa %>% filter(Type=="export"),
+            aes(x=month, 
+                y=Amounts/1000000, 
+                group=year,
+            color=Type)) +
+  geom_hline(aes(yintercept=avgvalue), 
+             data=hlineAfricaI.data, 
+             linetype=6, 
+             colour="lightgray", 
+             linewidth=0.5) + 
+  geom_hline(aes(yintercept=avgvalue), 
+             data=hlineAfricaE.data, 
+             linetype=6, 
+             colour="darkgray", 
+             linewidth=0.5) +
+  facet_grid(~year) +
+  theme(axis.text.x = element_text(angle=45)) +
+  labs(axis.text.x = element_blank(),
+       title = "Singapore Imports vs Exports with Africa, Jan 2020-Dec 2022") +
+  xlab("") +
+  ylab("Amount in Millions")
+```
+
+The plot display the fluctuating trend of import and export for both 2020 and 2022 but the import for 2021 is higher than export with European Union.
+:::
+
+All regional plots reveal the same pattern with 2020 trade being the lowest and 2022 trade being the highest. Moreover, all regional trades have a surge in March 2021 which concise with Singapore's reopening border in post COVID-19 period. It seems to be starting point of upwards trend for Singapore's trade.
+
+### Visualisation of Top 9 Imports and Exports Countries With Singapore Using Slope Graph
+
+Top 9 imports and exports countries with Singapore are selected to check the changing trade trend of Singapore from 2020 to 2022. The data will be visualised by using slope graph since it can reveal overall trend from 2020 to 2022. It can not only show the comparison of change of trade for top 9 countries but also reveal the ranking of countries in term of trade amount.
+
+#### Data Preparation
+
+The top 9 imports and exports countries are selected based on the observation of imports and exports data frames. Then the data is aggregated using *Countries* and *year* and create *Sum* variable to hold the total amount of imports and exports for each year.
+
+```{r}
+Top9imports <- imports %>% 
+  filter(Countries %in% c("Mainland China","Malaysia","Taiwan" ,"United States","Japan","Republic Of Korea","United Arab Emirates", "Indonesia", "Thailand")) %>%
+  group_by(Countries,year) %>% 
+  summarise(Sum=round(sum(Amounts)/1000000))
+
+
+Top9exports <- exports %>% 
+  filter(Countries %in% c("Mainland China","Hong Kong","Malaysia","United States", "Indonesia","Taiwan","Republic Of Korea","Japan" ,"Thailand")) %>%
+  group_by(Countries,year) %>% 
+  summarise(Sum=round(sum(Amounts)/1000000))
+
+
+```
+
+#### Slope Graph
+
+The imports and exports plot for top 9 countries are plotted side by side for comparison.
+
+```{r fig.height = 10 , fig.width = 10}
+
+Top9importsFig <- Top9imports %>% 
+                  mutate(year = factor(year)) %>%
+                  newggslopegraph(year, Sum, Countries,
+                  Title = "Top 9 Import Countries",
+                  SubTitle = "2020-2022",
+                  Caption = "The value is in millions")
+
+Top9exportsFig <- Top9exports %>% 
+                  mutate(year = factor(year)) %>%
+                  newggslopegraph(year, Sum, Countries,
+                  Title = "Top 9 Export Countries",
+                  SubTitle = "2020-2022",
+                  Caption = "The value is in millions")
+
+Top9importsFig + Top9exportsFig
+```
+
+The slope graph reveal that Mainland China is the top trade partner for Singapore. While the import from China is steadily increasing, the export from Singapore slows down in 2022 after surging in 2021. It might be due to political stability in the region. Although export from Singapore to Mainland China and Hong Kong in 2022 is lower than 2021, the overall trade of all the other countries are showing the upwards trend. It might be due to reopening of countries in post COVID-19 period.
+
+### Visualisation of Trade Change Over Time Using Animated Bubble Plot
+
+```{r}
+imports1 <- imports %>% 
+filter(!Countries %in% c("Asia","Europe","European Union", "America","Oceania","Africa","Total Merchandise Imports")) %>%
+  group_by(Countries,`Year-Month`) %>% 
+  summarise(Sum=sum(Amounts)/1000) %>%
+  filter(Sum > 0) %>% mutate(Type="import")
+
+exports1 <- exports %>% 
+filter(!Countries %in% c("Asia","Europe","European Union", "America","Oceania","Africa","Total Merchandise Exports")) %>%
+  group_by(Countries,`Year-Month`) %>% 
+  summarise(Sum=sum(Amounts)/1000) %>%
+  filter(Sum > 0) %>% mutate(Type="export")
+
+CombinedData <- rbind(imports1, exports1)
 ```
 
 ```{r}
-imports  <- read_csv("data/imports.csv",show_col_types = FALSE) 
-exports  <- read_csv("data/exports.csv",show_col_types = FALSE) 
+CombinedData <- CombinedData %>%
+  pivot_wider(names_from = Type,
+              values_from = Sum) %>% replace(is.na(.), 0)
 ```
+
+```{r}
+CombinedData <- CombinedData %>%
+  mutate(total = import + export,
+         pct.import = import / total * 100,
+         pct.export = export / total * 100)
+```
+
+```{r}
+CombinedData <- CombinedData %>%
+  mutate(Order = case_when(
+    (total >= 0         & total < 1500000) ~ "a",
+    (total >= 1500000   & total < 3000000) ~ "b",
+    (total >= 3000000   & total < 4500000) ~ "c",
+    (total >= 4500000   & total < 6000000) ~ "d",
+    (total >= 6000000   & total < 7500000) ~ "e",
+    (total >= 7500000   & total < 9000000) ~ "f",
+    (total >= 9000000   & total < 10500000) ~ "g",
+    (total >= 10500000  & total < 12000000) ~ "h",
+    (total >= 12000000  & total < 13500000) ~ "i",
+    (total >= 13500000  & total < 15000000) ~ "j",
+    (total >= 15000000) ~ "k"))
+```
+
+```{r}
+fig <- CombinedData %>% 
+  ggplot(aes(x = pct.import, y = pct.export, size = total, fill = Order)) + 
+  geom_point(alpha = 0.8, shape = 21, color = "black")+
+scale_fill_brewer(type = 'div', palette = 'RdYlBu', aesthetics = "fill") +
+labs(title = "Imports vs Exports of Singapore 2020-2022",
+       caption = "Data source: Singstat") +
+ylab("Percentage of Import") +
+xlab("Percentage of Export") +
+scale_x_continuous(limits=c(0,100), expand=c(0,0)) +               
+scale_y_continuous(limits=c(0,100), expand=c(0,0)) +
+scale_size(range = c(0, 10)) +
+coord_equal() +
+theme(plot.title = element_text(color="black", size=14, face="bold.italic"),
+plot.subtitle = element_text(color="blue", size=11),
+axis.title.x = element_text(color="dark blue", size=10),
+axis.title.y = element_text(color="dark blue", size=10),
+axis.text.x = element_text(size=7),
+axis.text.y = element_text(size=7))
+
+fig
+```
+
+```{r}
+figure <- fig + transition_time(`Year-Month`) +
+  labs(subtitle = "Year: {frame_time}") +
+  shadow_wake(wake_length = 0.3, alpha = FALSE)
+
+figure
+```
+
+# 4. The Learning Points

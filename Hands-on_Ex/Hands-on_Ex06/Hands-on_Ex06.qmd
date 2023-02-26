@@ -179,7 +179,7 @@ rice %>%
 
 ```{r}
 averp <- read_csv("data/AVERP.csv") %>% 
-  mutate(Date=ym(Date))
+  mutate(dd=ym(Date))
 ```
 
 #### **Step 2: Plotting the horizon graph**
@@ -188,7 +188,7 @@ averp <- read_csv("data/AVERP.csv") %>%
 averp %>% 
   filter(Date >= "2018-01-01") %>%
   ggplot() +
-  geom_horizon(aes(x = Date, y=Values), 
+  geom_horizon(aes(dd,Values), 
                origin = "midpoint", 
                horizonscale = 6)+
   facet_grid(`Consumer Items`~.) +

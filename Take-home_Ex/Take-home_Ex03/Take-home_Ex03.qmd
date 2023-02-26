@@ -190,4 +190,4 @@ The confidence interval for different flat type is more or less similar to each 
 
 # 4. The Learning Points
 
-Take-home exercise 3 can help me to familiarize with different analytics approach for statistical testing, building the linear regression model and visualising uncertainty. It also introduce me different librares and functions for visualisation and statistical analysis.
+Take-home exercise 3 can help me to familiarize with different analytics approach for statistical testing, building the linear regression model and visualising uncertainty. It also introduce me different libraries and functions for visualisation and statistical analysis.
