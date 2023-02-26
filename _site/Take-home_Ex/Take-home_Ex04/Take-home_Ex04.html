@@ -246,6 +246,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#import-data" id="toc-import-data" class="nav-link" data-scroll-target="#import-data">Import data</a></li>
   <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">Data Wrangling</a></li>
   <li><a href="#imports-vs-exports-visualisation-using-cycle-plot" id="toc-imports-vs-exports-visualisation-using-cycle-plot" class="nav-link" data-scroll-target="#imports-vs-exports-visualisation-using-cycle-plot">Imports vs Exports Visualisation Using <strong>Cycle Plot</strong></a></li>
+  <li><a href="#visualisation-of-top-9-imports-and-exports-countries-with-singapore-using-slope-graph" id="toc-visualisation-of-top-9-imports-and-exports-countries-with-singapore-using-slope-graph" class="nav-link" data-scroll-target="#visualisation-of-top-9-imports-and-exports-countries-with-singapore-using-slope-graph">Visualisation of Top 9 Imports and Exports Countries With Singapore Using Slope Graph</a></li>
+  <li><a href="#visualisation-of-trade-change-over-time-using-animated-bubble-plot" id="toc-visualisation-of-trade-change-over-time-using-animated-bubble-plot" class="nav-link" data-scroll-target="#visualisation-of-trade-change-over-time-using-animated-bubble-plot">Visualisation of Trade Change Over Time Using Animated Bubble Plot</a></li>
   </ul></li>
   <li><a href="#the-learning-points" id="toc-the-learning-points" class="nav-link" data-scroll-target="#the-learning-points">4. The Learning Points</a></li>
   </ul>
@@ -627,7 +629,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="Take-home_Ex04_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>The plot reveals that the export from Singapore to Oceania is always higher than import from Ocean to Singapore.</p>
+<p>The plot reveals that the export from Singapore to Oceania is always higher than import from Oceania to Singapore. The export shows the upwards trend from 2020 to 2022.</p>
 </div>
 <div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
 <div class="cell">
@@ -675,22 +677,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </div>
-<p>All regional plot reveal the same pattern with 2020 trade being the lowest and 2022 trade being the highest.</p>
+<p>All regional plots reveal the same pattern with 2020 trade being the lowest and 2022 trade being the highest. Moreover, all regional trades have a surge in March 2021 which concise with Singapore’s reopening border in post COVID-19 period. It seems to be starting point of upwards trend for Singapore’s trade.</p>
+</section>
+</section>
+<section id="visualisation-of-top-9-imports-and-exports-countries-with-singapore-using-slope-graph" class="level3">
+<h3 class="anchored" data-anchor-id="visualisation-of-top-9-imports-and-exports-countries-with-singapore-using-slope-graph">Visualisation of Top 9 Imports and Exports Countries With Singapore Using Slope Graph</h3>
+<p>Top 9 imports and exports countries with Singapore are selected to check the changing trade trend of Singapore from 2020 to 2022. The data will be visualised by using slope graph since it can reveal overall trend from 2020 to 2022. It can not only show the comparison of change of trade for top 9 countries but also reveal the ranking of countries in term of trade amount.</p>
+<section id="data-preparation-1" class="level4">
+<h4 class="anchored" data-anchor-id="data-preparation-1">Data Preparation</h4>
+<p>The top 9 imports and exports countries are selected based on the observation of imports and exports data frames. Then the data is aggregated using <em>Countries</em> and <em>year</em> and create <em>Sum</em> variable to hold the total amount of imports and exports for each year.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Top9imports <span class="ot">&lt;-</span> imports <span class="sc">%&gt;%</span> </span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Countries <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Mainland China"</span>,<span class="st">"Malaysia"</span>,<span class="st">"Taiwan"</span> ,<span class="st">"United States"</span>,<span class="st">"Japan"</span>,<span class="st">"Republic Of Korea"</span>,<span class="st">"United Arab Emirates"</span>, <span class="st">"Indonesia"</span>, <span class="st">"Thailand"</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Countries,year) <span class="sc">%&gt;%</span> </span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Sum=</span><span class="fu">round</span>(<span class="fu">sum</span>(Amounts)<span class="sc">/</span><span class="dv">1000000</span>),<span class="at">digits=</span><span class="dv">0</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Sum=</span><span class="fu">round</span>(<span class="fu">sum</span>(Amounts)<span class="sc">/</span><span class="dv">1000000</span>))</span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>Top9exports <span class="ot">&lt;-</span> exports <span class="sc">%&gt;%</span> </span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Countries <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Mainland China"</span>,<span class="st">"Hong Kong"</span>,<span class="st">"Malaysia"</span>,<span class="st">"United States"</span>, <span class="st">"Indonesia"</span>,<span class="st">"Taiwan"</span>,<span class="st">"Republic Of Korea"</span>,<span class="st">"Japan"</span> ,<span class="st">"Thailand"</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Countries,year) <span class="sc">%&gt;%</span> </span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Sum=</span><span class="fu">round</span>(<span class="fu">sum</span>(Amounts)<span class="sc">/</span><span class="dv">1000000</span>),<span class="at">digits=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Sum=</span><span class="fu">round</span>(<span class="fu">sum</span>(Amounts)<span class="sc">/</span><span class="dv">1000000</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+</section>
+<section id="slope-graph" class="level4">
+<h4 class="anchored" data-anchor-id="slope-graph">Slope Graph</h4>
+<p>The imports and exports plot for top 9 countries are plotted side by side for comparison.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -714,6 +728,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="Take-home_Ex04_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
+<p>The slope graph reveal that Mainland China is the top trade partner for Singapore. While the import from China is steadily increasing, the export from Singapore slows down in 2022 after surging in 2021. It might be due to political stability in the region. Although export from Singapore to Mainland China and Hong Kong in 2022 is lower than 2021, the overall trade of all the other countries are showing the upwards trend. It might be due to reopening of countries in post COVID-19 period.</p>
+</section>
+</section>
+<section id="visualisation-of-trade-change-over-time-using-animated-bubble-plot" class="level3">
+<h3 class="anchored" data-anchor-id="visualisation-of-trade-change-over-time-using-animated-bubble-plot">Visualisation of Trade Change Over Time Using Animated Bubble Plot</h3>
+<p>Animated bubble plot provide a way to tell a story visually and give a quick assessment of the data change over time. The bubble plot effectively can put third and fourth variables into assessment using bubble’s size and position. The variables are used as following: Size: Total trade amount (Import + Export)<br>
+Position: Relative percentage value along axes<br>
+Color: The bin of total trade Time Frame: From Jan 2020 to Dec 2022</p>
+<section id="data-preparation-2" class="level4">
+<h4 class="anchored" data-anchor-id="data-preparation-2">Data Preparation</h4>
+<p>The regional data are removed from the original data frame and the data is aggregated by group by <em>Countries</em> and <em>Year-Month</em> and summaries the total amount for import and export data frame respectively. Then <em>CombinedData</em> is created by combining <em>import1</em> and <em>export1</em> data frames.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -732,87 +757,96 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>CombinedData <span class="ot">&lt;-</span> <span class="fu">rbind</span>(imports1, exports1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<p>Then the <em>CombinedData</em> is pivoted wider with names from <em>Type</em> and values from <em>Sum</em> and replace N.A with 0. Then percentage of import and export on total trade amount is calculated and put into respective variables.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>CombinedData <span class="ot">&lt;-</span> CombinedData <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> Type,</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> Sum) <span class="sc">%&gt;%</span> <span class="fu">replace</span>(<span class="fu">is.na</span>(.), <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> Type, <span class="at">values_from =</span> Sum) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replace</span>(<span class="fu">is.na</span>(.),<span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total =</span> import <span class="sc">+</span> export,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">pct.import =</span> import <span class="sc">/</span> total <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">pct.export =</span> export <span class="sc">/</span> total <span class="sc">*</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<p>Next step is binning the total amount of trade. It is to display the different color for each bin in bubble plot.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>CombinedData <span class="ot">&lt;-</span> CombinedData <span class="sc">%&gt;%</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total =</span> import <span class="sc">+</span> export,</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">pct.import =</span> import <span class="sc">/</span> total <span class="sc">*</span> <span class="dv">100</span>,</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">pct.export =</span> export <span class="sc">/</span> total <span class="sc">*</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Order =</span> <span class="fu">case_when</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">0</span>         <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">1500000</span>) <span class="sc">~</span> <span class="st">"a"</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">1500000</span>   <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">3000000</span>) <span class="sc">~</span> <span class="st">"b"</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">3000000</span>   <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">4500000</span>) <span class="sc">~</span> <span class="st">"c"</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">4500000</span>   <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">6000000</span>) <span class="sc">~</span> <span class="st">"d"</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">6000000</span>   <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">7500000</span>) <span class="sc">~</span> <span class="st">"e"</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">7500000</span>   <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">9000000</span>) <span class="sc">~</span> <span class="st">"f"</span>,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">9000000</span>   <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">10500000</span>) <span class="sc">~</span> <span class="st">"g"</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">10500000</span>  <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">12000000</span>) <span class="sc">~</span> <span class="st">"h"</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">12000000</span>  <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">13500000</span>) <span class="sc">~</span> <span class="st">"i"</span>,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">13500000</span>  <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">15000000</span>) <span class="sc">~</span> <span class="st">"j"</span>,</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">15000000</span>) <span class="sc">~</span> <span class="st">"k"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+</section>
+<section id="still-bubble-plot" class="level4">
+<h4 class="anchored" data-anchor-id="still-bubble-plot">Still Bubble Plot</h4>
+<p>Firstly, the data frame is re-arranged into descending order based on total amount of trade so that the smaller bubble will be shown on top of big bubble. Secondly, the bubbles plotted with percentage of import as X axis and percentage of export as Y axis and the size is based on the total trade amounts and the color is based on the bin of total trade amounts. Thirdly, the border of bubble is drawn and the color palette for bubble is defined. Lastly, all the aesthetics of the plot are added accordingly.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>CombinedData <span class="ot">&lt;-</span> CombinedData <span class="sc">%&gt;%</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Order =</span> <span class="fu">case_when</span>(</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">0</span>         <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">1500000</span>) <span class="sc">~</span> <span class="st">"a"</span>,</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">1500000</span>   <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">3000000</span>) <span class="sc">~</span> <span class="st">"b"</span>,</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">3000000</span>   <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">4500000</span>) <span class="sc">~</span> <span class="st">"c"</span>,</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">4500000</span>   <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">6000000</span>) <span class="sc">~</span> <span class="st">"d"</span>,</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">6000000</span>   <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">7500000</span>) <span class="sc">~</span> <span class="st">"e"</span>,</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">7500000</span>   <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">9000000</span>) <span class="sc">~</span> <span class="st">"f"</span>,</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">9000000</span>   <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">10500000</span>) <span class="sc">~</span> <span class="st">"g"</span>,</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">10500000</span>  <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">12000000</span>) <span class="sc">~</span> <span class="st">"h"</span>,</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">12000000</span>  <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">13500000</span>) <span class="sc">~</span> <span class="st">"i"</span>,</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">13500000</span>  <span class="sc">&amp;</span> total <span class="sc">&lt;</span> <span class="dv">15000000</span>) <span class="sc">~</span> <span class="st">"j"</span>,</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    (total <span class="sc">&gt;=</span> <span class="dv">15000000</span>) <span class="sc">~</span> <span class="st">"k"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<details>
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>fig <span class="ot">&lt;-</span> CombinedData <span class="sc">%&gt;%</span> </span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> pct.import, <span class="at">y =</span> pct.export, <span class="at">size =</span> total, <span class="at">fill =</span> Order)) <span class="sc">+</span> </span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">shape =</span> <span class="dv">21</span>, <span class="at">color =</span> <span class="st">"black"</span>)<span class="sc">+</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_fill_brewer</span>(<span class="at">type =</span> <span class="st">'div'</span>, <span class="at">palette =</span> <span class="st">'RdYlBu'</span>, <span class="at">aesthetics =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Imports vs Exports of Singapore 2020-2022"</span>,</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">"Data source: Singstat"</span>) <span class="sc">+</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ylab</span>(<span class="st">"Percentage of Import"</span>) <span class="sc">+</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">xlab</span>(<span class="st">"Percentage of Export"</span>) <span class="sc">+</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_x_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">100</span>), <span class="at">expand=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span>               </span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_y_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">100</span>), <span class="at">expand=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_size</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>)) <span class="sc">+</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="fu">coord_equal</span>() <span class="sc">+</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">color=</span><span class="st">"black"</span>, <span class="at">size=</span><span class="dv">14</span>, <span class="at">face=</span><span class="st">"bold.italic"</span>),</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">color=</span><span class="st">"blue"</span>, <span class="at">size=</span><span class="dv">11</span>),</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">color=</span><span class="st">"dark blue"</span>, <span class="at">size=</span><span class="dv">10</span>),</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">color=</span><span class="st">"dark blue"</span>, <span class="at">size=</span><span class="dv">10</span>),</span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">7</span>),</span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">7</span>))</span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fig <span class="ot">&lt;-</span> CombinedData <span class="sc">%&gt;%</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(Countries,<span class="fu">desc</span>(total)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> pct.import, <span class="at">y =</span> pct.export, <span class="at">size =</span> total, <span class="at">fill =</span> Order)) <span class="sc">+</span> </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">shape =</span> <span class="dv">21</span>, <span class="at">color =</span> <span class="st">"black"</span>)<span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_fill_brewer</span>(<span class="at">type =</span> <span class="st">'div'</span>, <span class="at">palette =</span> <span class="st">'RdYlBu'</span>, <span class="at">aesthetics =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Imports vs Exports of Singapore 2020-2022"</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">"Data source: Singstat"</span>) <span class="sc">+</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ylab</span>(<span class="st">"Percentage of Import"</span>) <span class="sc">+</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">xlab</span>(<span class="st">"Percentage of Export"</span>) <span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_x_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">100</span>), <span class="at">expand=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span>               </span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_y_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">100</span>), <span class="at">expand=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_size</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>)) <span class="sc">+</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">color=</span><span class="st">"black"</span>, <span class="at">size=</span><span class="dv">14</span>, <span class="at">face=</span><span class="st">"bold.italic"</span>),</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">color=</span><span class="st">"blue"</span>, <span class="at">size=</span><span class="dv">11</span>),</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">color=</span><span class="st">"dark blue"</span>, <span class="at">size=</span><span class="dv">10</span>),</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">color=</span><span class="st">"dark blue"</span>, <span class="at">size=</span><span class="dv">10</span>),</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">7</span>),</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">7</span>))</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="Take-home_Ex04_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+<p><img src="Take-home_Ex04_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+</section>
+<section id="animated-bubble-plot" class="level4">
+<h4 class="anchored" data-anchor-id="animated-bubble-plot">Animated Bubble Plot</h4>
+<p>Finally, the still bubble plot is animated by adding transition time frame and the display time for each time.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>figure <span class="ot">&lt;-</span> fig <span class="sc">+</span> <span class="fu">transition_time</span>(<span class="st">`</span><span class="at">Year-Month</span><span class="st">`</span>) <span class="sc">+</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">"Year: {frame_time}"</span>) <span class="sc">+</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shadow_wake</span>(<span class="at">wake_length =</span> <span class="fl">0.3</span>, <span class="at">alpha =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>figure</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>figure <span class="ot">&lt;-</span> fig <span class="sc">+</span> <span class="fu">transition_time</span>(<span class="st">`</span><span class="at">Year-Month</span><span class="st">`</span>) <span class="sc">+</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">"Year: {frame_time}"</span>) <span class="sc">+</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shadow_wake</span>(<span class="at">wake_length =</span> <span class="fl">0.3</span>, <span class="at">alpha =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>figure</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="Take-home_Ex04_files/figure-html/unnamed-chunk-19-1.gif" class="img-fluid"></p>
+<p><img src="Take-home_Ex04_files/figure-html/unnamed-chunk-18-1.gif" class="img-fluid"></p>
 </div>
 </div>
+<p>The bubbles at left top corner reveals that Singapore has imports relationship with some of the countries while exports amount with these countries is closed to zero. The same thing applies for bubbles in right bottom corner that shows Singapore has export trade relationship with these countries but closed to zero imports from these countries.</p>
+<p>The same upwards trend as the previous visual analytics is shown in the animated bubble plot. The bubble are getting bigger and more to blueish color towards 2022. The trade amount for Singapore is gradually picking up its pace during post COVID-19 period.</p>
 </section>
 </section>
 </section>
 <section id="the-learning-points" class="level1">
 <h1>4. The Learning Points</h1>
+<p>Take-home exercise 4 introduces me to different approaches of visualisation for time series data. It also make me realize that R has quite a variety of libraries to use for visualisation be it still image or animated image. It also help me familiarize with different function of R language such as pivoting.</p>
 
 
 </section>

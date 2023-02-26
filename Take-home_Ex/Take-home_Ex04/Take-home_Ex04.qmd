@@ -424,6 +424,14 @@ The slope graph reveal that Mainland China is the top trade partner for Singapor
 
 ### Visualisation of Trade Change Over Time Using Animated Bubble Plot
 
+Animated bubble plot provide a way to tell a story visually and give a quick assessment of the data change over time. The bubble plot effectively can put third and fourth variables into assessment using bubble's size and position. The variables are used as following: Size: Total trade amount (Import + Export)\
+Position: Relative percentage value along axes\
+Color: The bin of total trade Time Frame: From Jan 2020 to Dec 2022
+
+#### Data Preparation
+
+The regional data are removed from the original data frame and the data is aggregated by group by *Countries* and *Year-Month* and summaries the total amount for import and export data frame respectively. Then *CombinedData* is created by combining *import1* and *export1* data frames.
+
 ```{r}
 imports1 <- imports %>% 
 filter(!Countries %in% c("Asia","Europe","European Union", "America","Oceania","Africa","Total Merchandise Imports")) %>%
@@ -440,18 +448,18 @@ filter(!Countries %in% c("Asia","Europe","European Union", "America","Oceania","
 CombinedData <- rbind(imports1, exports1)
 ```
 
-```{r}
-CombinedData <- CombinedData %>%
-  pivot_wider(names_from = Type,
-              values_from = Sum) %>% replace(is.na(.), 0)
-```
+Then the *CombinedData* is pivoted wider with names from *Type* and values from *Sum* and replace N.A with 0. Then percentage of import and export on total trade amount is calculated and put into respective variables.
 
 ```{r}
 CombinedData <- CombinedData %>%
+  pivot_wider(names_from = Type, values_from = Sum) %>% 
+  replace(is.na(.),0) %>%
   mutate(total = import + export,
          pct.import = import / total * 100,
          pct.export = export / total * 100)
 ```
+
+Next step is binning the total amount of trade. It is to display the different color for each bin in bubble plot.
 
 ```{r}
 CombinedData <- CombinedData %>%
@@ -469,8 +477,13 @@ CombinedData <- CombinedData %>%
     (total >= 15000000) ~ "k"))
 ```
 
+#### Still Bubble Plot
+
+Firstly, the data frame is re-arranged into descending order based on total amount of trade so that the smaller bubble will be shown on top of big bubble. Secondly, the bubbles plotted with percentage of import as X axis and percentage of export as Y axis and the size is based on the total trade amounts and the color is based on the bin of total trade amounts. Thirdly, the border of bubble is drawn and the color palette for bubble is defined. Lastly, all the aesthetics of the plot are added accordingly.
+
 ```{r}
 fig <- CombinedData %>% 
+  arrange(Countries,desc(total)) %>%
   ggplot(aes(x = pct.import, y = pct.export, size = total, fill = Order)) + 
   geom_point(alpha = 0.8, shape = 21, color = "black")+
 scale_fill_brewer(type = 'div', palette = 'RdYlBu', aesthetics = "fill") +
@@ -482,7 +495,8 @@ scale_x_continuous(limits=c(0,100), expand=c(0,0)) +
 scale_y_continuous(limits=c(0,100), expand=c(0,0)) +
 scale_size(range = c(0, 10)) +
 coord_equal() +
-theme(plot.title = element_text(color="black", size=14, face="bold.italic"),
+theme(legend.position = "none",
+      plot.title = element_text(color="black", size=14, face="bold.italic"),
 plot.subtitle = element_text(color="blue", size=11),
 axis.title.x = element_text(color="dark blue", size=10),
 axis.title.y = element_text(color="dark blue", size=10),
@@ -492,6 +506,10 @@ axis.text.y = element_text(size=7))
 fig
 ```
 
+#### Animated Bubble Plot
+
+Finally, the still bubble plot is animated by adding transition time frame and the display time for each time.
+
 ```{r}
 figure <- fig + transition_time(`Year-Month`) +
   labs(subtitle = "Year: {frame_time}") +
@@ -500,4 +518,10 @@ figure <- fig + transition_time(`Year-Month`) +
 figure
 ```
 
+The bubbles at left top corner reveals that Singapore has imports relationship with some of the countries while exports amount with these countries is closed to zero. The same thing applies for bubbles in right bottom corner that shows Singapore has export trade relationship with these countries but closed to zero imports from these countries.
+
+The same upwards trend as the previous visual analytics is shown in the animated bubble plot. The bubble are getting bigger and more to blueish color towards 2022. The trade amount for Singapore is gradually picking up its pace during post COVID-19 period.
+
 # 4. The Learning Points
+
+Take-home exercise 4 introduces me to different approaches of visualisation for time series data. It also make me realize that R has quite a variety of libraries to use for visualisation be it still image or animated image. It also help me familiarize with different function of R language such as pivoting.
