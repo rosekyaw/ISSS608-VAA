@@ -133,7 +133,7 @@ Firstly, the average value of imports and exports for each year is calculated to
 ::: panel-tabset
 ##### Asia
 
-```{r}
+```{r fig.width = 10}
 hlineAsiaI.data <- Asia %>% filter(Type=="import") %>%
   group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
 
@@ -173,7 +173,7 @@ From the plot, it can be seen that, the import and export with Asia mirror each 
 
 ##### Europe
 
-```{r}
+```{r fig.width = 10}
 hlineEuropeI.data <- Europe %>% filter(Type=="import") %>%
   group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
 
@@ -213,7 +213,7 @@ From the plot, it can be seen that import from Europe to Singapore is higher tha
 
 ##### European Union
 
-```{r}
+```{r fig.width = 10}
 hlineEUI.data <- EU %>% filter(Type=="import") %>%
   group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
 
@@ -253,7 +253,7 @@ The trade between Singapore and European Union is fluctuating throughout the yea
 
 ##### America
 
-```{r}
+```{r fig.width = 10}
 hlineAmericaI.data <- America %>% filter(Type=="import") %>%
   group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
 
@@ -293,7 +293,7 @@ The trade between Singapore and America is changing throughout the year. While t
 
 ##### Oceania
 
-```{r}
+```{r fig.width = 10}
 hlineOceaniaI.data <- Oceania %>% filter(Type=="import") %>%
   group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
 
@@ -333,7 +333,7 @@ The plot reveals that the export from Singapore to Oceania is always higher than
 
 ##### Africa
 
-```{r}
+```{r fig.width = 10}
 hlineAfricaI.data <- Africa %>% filter(Type=="import") %>%
   group_by(year) %>%  summarise(avgvalue = mean(Amounts)/1000000)
 
@@ -481,7 +481,7 @@ CombinedData <- CombinedData %>%
 
 Firstly, the data frame is re-arranged into descending order based on total amount of trade so that the smaller bubble will be shown on top of big bubble. Secondly, the bubbles plotted with percentage of import as X axis and percentage of export as Y axis and the size is based on the total trade amounts and the color is based on the bin of total trade amounts. Thirdly, the border of bubble is drawn and the color palette for bubble is defined. Lastly, all the aesthetics of the plot are added accordingly.
 
-```{r}
+```{r fig.width = 10}
 fig <- CombinedData %>% 
   arrange(Countries,desc(total)) %>%
   ggplot(aes(x = pct.import, y = pct.export, size = total, fill = Order)) + 
