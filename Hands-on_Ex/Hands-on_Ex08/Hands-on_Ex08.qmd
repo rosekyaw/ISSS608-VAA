@@ -257,7 +257,7 @@ g <- GAStech_graph %>%
 g + theme_graph()
 ```
 
-## **Building Interactive Network Graph with visNetwork**
+##  **Building Interactive Network Graph with visNetwork**
 
 ### **Data preparation**
 
@@ -325,7 +325,12 @@ visNetwork(GAStech_nodes,
            GAStech_edges_aggregated) %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
   visOptions(highlightNearest = TRUE,
-             nodesIdSelection = TRUE) %>%
+             nodesIdSelection = list(enabled = TRUE, 
+             style = 'width: 200px;   height: 26px;
+                      background: #f8f8f8;
+                      color: darkblue;
+                      border:none;
+                      outline:none;'))    %>%
   visLegend() %>%
   visLayout(randomSeed = 123)
 ```
